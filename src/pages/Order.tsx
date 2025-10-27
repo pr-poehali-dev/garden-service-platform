@@ -4,33 +4,53 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Icon from "@/components/ui/icon";
 import { useOrder } from "@/contexts/OrderContext";
+import { useOrderRequests } from "@/contexts/OrderRequestContext";
 import { useToast } from "@/hooks/use-toast";
 
 const Order = () => {
   const { items, removeItem, clearOrder, getTotalPrice } = useOrder();
+  const { addRequest } = useOrderRequests();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
-    email: "",
     address: "",
+    phone: "",
+    messenger: "",
     comment: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.phone) {
+    if (!formData.name || !formData.address || !formData.phone) {
       toast({
         title: "Ошибка",
-        description: "Заполните имя и телефон",
+        description: "Заполните все обязательные поля",
         variant: "destructive"
       });
       return;
     }
+
+    const orderData = {
+      name: formData.name,
+      address: formData.address,
+      phone: formData.phone,
+      messenger: formData.messenger || undefined,
+      comment: formData.comment || undefined,
+      services: items.map(item => ({
+        name: item.name,
+        category: item.category,
+        price: item.price,
+        unit: item.unit || ''
+      })),
+      totalPrice: getTotalPrice()
+    };
+
+    addRequest(orderData);
 
     toast({
       title: "Заявка отправлена!",
@@ -92,6 +112,18 @@ const Order = () => {
 
                     <div>
                       <label className="block text-sm font-medium mb-2">
+                        Адрес участка <span className="text-destructive">*</span>
+                      </label>
+                      <Input
+                        placeholder="г. Москва, ул. Примерная, д. 1"
+                        value={formData.address}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
                         Телефон <span className="text-destructive">*</span>
                       </label>
                       <Input
@@ -105,25 +137,17 @@ const Order = () => {
 
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Email
+                        Мессенджер (необязательно)
                       </label>
-                      <Input
-                        type="email"
-                        placeholder="example@mail.ru"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Адрес участка
-                      </label>
-                      <Input
-                        placeholder="г. Москва, ул. Примерная, д. 1"
-                        value={formData.address}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      />
+                      <Select value={formData.messenger} onValueChange={(value) => setFormData({ ...formData, messenger: value })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Выберите мессенджер" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                          <SelectItem value="telegram">Telegram</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>

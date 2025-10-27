@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,11 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePortfolio, PortfolioPost } from "@/contexts/PortfolioContext";
+import { useOrderRequests } from "@/contexts/OrderRequestContext";
 import { useToast } from "@/hooks/use-toast";
 
 const Admin = () => {
   const { isAdmin, logout } = useAuth();
   const { posts, addPost, updatePost, deletePost } = usePortfolio();
+  const { requests } = useOrderRequests();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -102,15 +104,29 @@ const Admin = () => {
     <div className="min-h-screen bg-secondary/20">
       <section className="py-12 bg-gradient-to-br from-background via-secondary to-accent">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-6">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">Админ-панель</h1>
-              <p className="text-muted-foreground">Управление портфолио</p>
+              <p className="text-muted-foreground">Управление портфолио и заявками</p>
             </div>
             <Button onClick={handleLogout} variant="outline" size="lg">
               <Icon name="LogOut" className="mr-2" size={18} />
               Выйти
             </Button>
+          </div>
+          
+          <div className="flex gap-4">
+            <Link to="/admin/orders">
+              <Button variant="default" size="lg" className="gap-2">
+                <Icon name="ShoppingCart" size={20} />
+                Заявки
+                {requests.filter(r => r.status === 'new').length > 0 && (
+                  <span className="ml-2 bg-white text-primary px-2 py-0.5 rounded-full text-xs font-bold">
+                    {requests.filter(r => r.status === 'new').length}
+                  </span>
+                )}
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
