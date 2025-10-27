@@ -163,50 +163,42 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <div>
               <h3 className="font-semibold mb-4">Социальные сети</h3>
               <div className="flex gap-3">
-                {contacts.socials.whatsapp && (
-                  <a
-                    href={contacts.socials.whatsapp}
-                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label="WhatsApp"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="MessageCircle" size={18} />
-                  </a>
-                )}
-                {contacts.socials.telegram && (
-                  <a
-                    href={contacts.socials.telegram}
-                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label="Telegram"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="Send" size={18} />
-                  </a>
-                )}
-                {contacts.socials.instagram && (
-                  <a
-                    href={contacts.socials.instagram}
-                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label="Instagram"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="Instagram" size={18} />
-                  </a>
-                )}
-                {contacts.socials.youtube && (
-                  <a
-                    href={contacts.socials.youtube}
-                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label="YouTube"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="Youtube" size={18} />
-                  </a>
-                )}
+                <a
+                  href={contacts.socials.whatsapp || '#'}
+                  className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                  aria-label="WhatsApp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon name="MessageCircle" size={18} />
+                </a>
+                <a
+                  href={contacts.socials.telegram || '#'}
+                  className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                  aria-label="Telegram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon name="Send" size={18} />
+                </a>
+                <a
+                  href={contacts.socials.instagram || '#'}
+                  className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon name="Instagram" size={18} />
+                </a>
+                <a
+                  href={contacts.socials.youtube || '#'}
+                  className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon name="Youtube" size={18} />
+                </a>
               </div>
             </div>
           </div>
