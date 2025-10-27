@@ -103,7 +103,10 @@ const AdminContacts = () => {
                   </div>
 
                   <div className="border-t pt-6">
-                    <h3 className="text-lg font-semibold mb-4">Социальные сети</h3>
+                    <h3 className="text-lg font-semibold mb-2">Социальные сети</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Иконки автоматически появятся в футере сайта после заполнения ссылок
+                    </p>
                     
                     <div className="space-y-4">
                       <div>
