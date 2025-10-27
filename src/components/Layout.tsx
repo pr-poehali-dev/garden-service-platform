@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
 import { useOrder } from "@/contexts/OrderContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { items } = useOrder();
+  const { contacts } = useSiteSettings();
 
   const navigation = [
     { name: "Главная", path: "/" },
@@ -139,15 +141,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <ul className="space-y-2 text-background/70">
                 <li className="flex items-center gap-2">
                   <Icon name="Phone" size={16} />
-                  +7 (495) 123-45-67
+                  {contacts.phone}
                 </li>
                 <li className="flex items-center gap-2">
                   <Icon name="Mail" size={16} />
-                  hello@agency.ru
+                  {contacts.email}
                 </li>
                 <li className="flex items-start gap-2">
                   <Icon name="MapPin" size={16} className="mt-1" />
-                  <span>г. Москва, ул. Тверская, 12</span>
+                  <span>{contacts.address}</span>
                 </li>
               </ul>
             </div>
@@ -155,16 +157,50 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <div>
               <h3 className="font-semibold mb-4">Социальные сети</h3>
               <div className="flex gap-3">
-                {["Instagram", "Facebook", "Linkedin", "MessageCircle"].map((social) => (
+                {contacts.socials.instagram && (
                   <a
-                    key={social}
-                    href="#"
+                    href={contacts.socials.instagram}
                     className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label={social}
+                    aria-label="Instagram"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <Icon name={social} size={18} />
+                    <Icon name="Instagram" size={18} />
                   </a>
-                ))}
+                )}
+                {contacts.socials.facebook && (
+                  <a
+                    href={contacts.socials.facebook}
+                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                    aria-label="Facebook"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name="Facebook" size={18} />
+                  </a>
+                )}
+                {contacts.socials.linkedin && (
+                  <a
+                    href={contacts.socials.linkedin}
+                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                    aria-label="LinkedIn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name="Linkedin" size={18} />
+                  </a>
+                )}
+                {contacts.socials.whatsapp && (
+                  <a
+                    href={contacts.socials.whatsapp}
+                    className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
+                    aria-label="WhatsApp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon name="MessageCircle" size={18} />
+                  </a>
+                )}
               </div>
             </div>
           </div>
