@@ -53,9 +53,9 @@ const Home = () => {
                 <Icon name="ArrowRight" className="ml-2" size={20} />
               </Button>
             </Link>
-            <Link to="/contact">
+            <Link to="/services">
               <Button size="lg" variant="outline" className="text-lg px-8">
-                Связаться с нами
+                Услуги и цены
               </Button>
             </Link>
           </div>
