@@ -122,28 +122,28 @@ const AdminContacts = () => {
 
                       <div>
                         <label className="block text-sm font-medium mb-2">
-                          Facebook
+                          Telegram
                         </label>
                         <Input
-                          placeholder="https://facebook.com/page"
-                          value={formData.socials.facebook || ''}
+                          placeholder="https://t.me/username"
+                          value={formData.socials.telegram || ''}
                           onChange={(e) => setFormData({ 
                             ...formData, 
-                            socials: { ...formData.socials, facebook: e.target.value }
+                            socials: { ...formData.socials, telegram: e.target.value }
                           })}
                         />
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium mb-2">
-                          LinkedIn
+                          YouTube
                         </label>
                         <Input
-                          placeholder="https://linkedin.com/company/name"
-                          value={formData.socials.linkedin || ''}
+                          placeholder="https://youtube.com/@channel"
+                          value={formData.socials.youtube || ''}
                           onChange={(e) => setFormData({ 
                             ...formData, 
-                            socials: { ...formData.socials, linkedin: e.target.value }
+                            socials: { ...formData.socials, youtube: e.target.value }
                           })}
                         />
                       </div>

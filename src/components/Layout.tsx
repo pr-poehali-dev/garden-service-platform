@@ -173,26 +173,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <Icon name="Instagram" size={18} />
                   </a>
                 )}
-                {contacts.socials.facebook && (
+                {contacts.socials.telegram && (
                   <a
-                    href={contacts.socials.facebook}
+                    href={contacts.socials.telegram}
                     className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label="Facebook"
+                    aria-label="Telegram"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon name="Facebook" size={18} />
+                    <Icon name="Send" size={18} />
                   </a>
                 )}
-                {contacts.socials.linkedin && (
+                {contacts.socials.youtube && (
                   <a
-                    href={contacts.socials.linkedin}
+                    href={contacts.socials.youtube}
                     className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors"
-                    aria-label="LinkedIn"
+                    aria-label="YouTube"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon name="Linkedin" size={18} />
+                    <Icon name="Youtube" size={18} />
                   </a>
                 )}
                 {contacts.socials.whatsapp && (

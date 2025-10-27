@@ -6,8 +6,8 @@ export interface ContactInfo {
   address: string;
   socials: {
     instagram?: string;
-    facebook?: string;
-    linkedin?: string;
+    telegram?: string;
+    youtube?: string;
     whatsapp?: string;
   };
 }
@@ -27,8 +27,8 @@ const defaultContacts: ContactInfo = {
   address: 'г. Москва, ул. Тверская, 12',
   socials: {
     instagram: '#',
-    facebook: '#',
-    linkedin: '#',
+    telegram: '#',
+    youtube: '#',
     whatsapp: '#'
   }
 };
