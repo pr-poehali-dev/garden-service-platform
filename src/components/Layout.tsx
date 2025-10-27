@@ -2,10 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
+import { useOrder } from "@/contexts/OrderContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { items } = useOrder();
 
   const navigation = [
     { name: "Главная", path: "/" },
@@ -41,7 +43,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               ))}
             </div>
 
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-3">
+              <Link to="/order" className="relative">
+                <Button size="lg" variant="outline" className="gap-2">
+                  <Icon name="ShoppingCart" size={18} />
+                  Заявка
+                  {items.length > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full text-xs flex items-center justify-center font-bold">
+                      {items.length}
+                    </span>
+                  )}
+                </Button>
+              </Link>
               <Link to="/contact">
                 <Button size="lg" className="gap-2">
                   <Icon name="Mail" size={18} />
