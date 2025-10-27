@@ -17,7 +17,7 @@ interface TeamMember {
 
 const AdminTeam = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAdmin } = useAuth();
   const { toast } = useToast();
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,12 +30,12 @@ const AdminTeam = () => {
   });
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAdmin) {
       navigate('/admin/login');
       return;
     }
     fetchTeam();
-  }, [isAuthenticated, navigate]);
+  }, [isAdmin, navigate]);
 
   const fetchTeam = async () => {
     try {
