@@ -62,6 +62,14 @@ const AdminDashboard = () => {
       color: "bg-green-500"
     },
     {
+      title: "Наша команда",
+      description: "Управление карточками сотрудников",
+      icon: "Users",
+      path: "/admin/team",
+      badge: null,
+      color: "bg-teal-500"
+    },
+    {
       title: "Контакты",
       description: "Редактирование контактной информации",
       icon: "Phone",

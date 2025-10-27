@@ -27,12 +27,6 @@ const Home = () => {
     }
   ];
 
-  const team = [
-    { name: "Сергей Зеленский", role: "Главный агроном", photo: "https://i.pravatar.cc/300?img=12" },
-    { name: "Ольга Садовая", role: "Ландшафтный дизайнер", photo: "https://i.pravatar.cc/300?img=5" },
-    { name: "Игорь Лесник", role: "Специалист по деревьям", photo: "https://i.pravatar.cc/300?img=14" }
-  ];
-
   return (
     <div className="min-h-screen">
       <section className="relative h-[90vh] flex items-center justify-center bg-gradient-to-br from-background via-secondary to-accent overflow-hidden">
@@ -94,35 +88,6 @@ const Home = () => {
                 <Icon name="ChevronRight" className="ml-2" size={20} />
               </Button>
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Наша команда</h2>
-          <p className="text-center text-muted-foreground mb-12 text-lg">
-            Опытные специалисты с профильным образованием
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {team.map((member, index) => (
-              <div 
-                key={index} 
-                className="text-center animate-scale-in"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary/20">
-                  <img 
-                    src={member.photo} 
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-                <p className="text-muted-foreground">{member.role}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

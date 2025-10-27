@@ -1,0 +1,38 @@
+{
+  "tests": [
+    {
+      "name": "Get all team members",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": [
+        {
+          "id": "number",
+          "name": "string",
+          "position": "string",
+          "photo": "string",
+          "order_index": "number"
+        }
+      ],
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Add new team member",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Тестовый сотрудник",
+        "position": "Тестовая должность",
+        "photo": "https://i.pravatar.cc/400?img=50",
+        "order_index": 10
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "id": "number",
+        "name": "Тестовый сотрудник",
+        "position": "Тестовая должность"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
