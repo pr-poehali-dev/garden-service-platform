@@ -59,12 +59,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   )}
                 </Button>
               </Link>
-              <Link to="/contact">
-                <Button size="lg" className="gap-2">
-                  <Icon name="Mail" size={18} />
-                  Связаться
-                </Button>
-              </Link>
             </div>
 
             <button
@@ -93,12 +87,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     </Button>
                   </Link>
                 ))}
-                <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>
-                  <Button size="lg" className="w-full gap-2 mt-2">
-                    <Icon name="Mail" size={18} />
-                    Связаться
-                  </Button>
-                </Link>
               </div>
             </div>
           )}
