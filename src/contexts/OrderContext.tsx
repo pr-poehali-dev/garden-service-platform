@@ -6,12 +6,15 @@ interface OrderItem {
   name: string;
   price: number;
   unit?: string;
+  quantity: number;
+  totalPrice: number;
 }
 
 interface OrderContextType {
   items: OrderItem[];
   addItem: (item: OrderItem) => void;
   removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearOrder: () => void;
   getTotalPrice: () => number;
 }
