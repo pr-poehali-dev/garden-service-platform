@@ -1,12 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
+import { useServices, Service } from "@/contexts/ServicesContext";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminServices = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
+  const { categories, updateService, deleteService, addService } = useServices();
+  const { toast } = useToast();
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAddingNew, setIsAddingNew] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    price: 0,
+    unit: ""
+  });
 
   useEffect(() => {
     if (!isAdmin) {
@@ -18,15 +51,100 @@ const AdminServices = () => {
     return null;
   }
 
-  const categories = [
-    { name: "Уход за зелёными насаждениями", icon: "TreeDeciduous", servicesCount: 8 },
-    { name: "Обработка растений и участка", icon: "Bug", servicesCount: 8 },
-    { name: "Газоны и почва", icon: "Sprout", servicesCount: 8 },
-    { name: "Посадочные работы", icon: "Flower2", servicesCount: 8 },
-    { name: "Благоустройство и ландшафт", icon: "Home", servicesCount: 8 },
-    { name: "Уборка участка", icon: "Trash2", servicesCount: 8 },
-    { name: "Зимнее обслуживание", icon: "Snowflake", servicesCount: 8 },
-    { name: "Комплексное обслуживание", icon: "Calendar", servicesCount: 8 }
+  const categoryList = Object.keys(categories).map(slug => ({
+    slug,
+    ...categories[slug]
+  }));
+
+  const handleEditService = (categorySlug: string, service: Service) => {
+    setSelectedCategory(categorySlug);
+    setEditingService(service);
+    setFormData({
+      name: service.name,
+      price: service.price,
+      unit: service.unit
+    });
+    setIsAddingNew(false);
+    setIsDialogOpen(true);
+  };
+
+  const handleAddService = (categorySlug: string) => {
+    setSelectedCategory(categorySlug);
+    setEditingService(null);
+    setFormData({
+      name: "",
+      price: 0,
+      unit: "шт"
+    });
+    setIsAddingNew(true);
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveService = () => {
+    if (!selectedCategory) return;
+
+    if (isAddingNew) {
+      const newId = `new_${Date.now()}`;
+      addService(selectedCategory, {
+        id: newId,
+        ...formData
+      });
+      toast({
+        title: "Услуга добавлена",
+        description: `Услуга "${formData.name}" успешно добавлена`
+      });
+    } else if (editingService) {
+      updateService(selectedCategory, editingService.id, formData);
+      toast({
+        title: "Услуга обновлена",
+        description: `Услуга "${formData.name}" успешно обновлена`
+      });
+    }
+
+    setIsDialogOpen(false);
+  };
+
+  const handleDeleteService = (categorySlug: string, serviceId: string, serviceName: string) => {
+    if (confirm(`Удалить услугу "${serviceName}"?`)) {
+      deleteService(categorySlug, serviceId);
+      toast({
+        title: "Услуга удалена",
+        description: `Услуга "${serviceName}" удалена`
+      });
+    }
+  };
+
+  const commonUnits = [
+    "шт",
+    "сотка",
+    "м²",
+    "м³",
+    "дерево",
+    "куст",
+    "растение",
+    "участок",
+    "комплекс",
+    "проект",
+    "услуга",
+    "месяц",
+    "год",
+    "выезд",
+    "система",
+    "дом",
+    "теплица",
+    "клумба",
+    "пень",
+    "крыша",
+    "водоём",
+    "рейс",
+    "машина",
+    "помещение",
+    "цветник",
+    "горка",
+    "объект",
+    "сезон",
+    "бесплатно",
+    "включено"
   ];
 
   return (
@@ -43,7 +161,7 @@ const AdminServices = () => {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">Редактирование услуг</h1>
-              <p className="text-muted-foreground">Управление категориями и ценами услуг</p>
+              <p className="text-muted-foreground">Управление категориями, ценами и единицами измерения</p>
             </div>
           </div>
         </div>
@@ -51,54 +169,131 @@ const AdminServices = () => {
 
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Категории услуг</CardTitle>
-              <CardDescription>8 категорий с детальными услугами и ценами</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {categories.map((category, index) => (
-                  <div key={index} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary/50 transition-colors">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Icon name={category.icon} className="text-primary" size={24} />
+          <div className="space-y-6">
+            {categoryList.map(({ slug, title, icon, services }) => (
+              <Card key={slug}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Icon name={icon} className="text-primary" size={24} />
+                      </div>
+                      <div>
+                        <CardTitle>{title}</CardTitle>
+                        <CardDescription>{services.length} услуг</CardDescription>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{category.name}</h3>
-                      <p className="text-sm text-muted-foreground">{category.servicesCount} услуг</p>
-                    </div>
-                    <Icon name="ChevronRight" className="text-muted-foreground" size={20} />
+                    <Button onClick={() => handleAddService(slug)} size="sm" className="gap-2">
+                      <Icon name="Plus" size={16} />
+                      Добавить услугу
+                    </Button>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
-                <Icon name="Info" size={24} />
-                В разработке
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-blue-800 dark:text-blue-200 mb-4">
-                Функционал редактирования услуг и цен находится в разработке. 
-                Сейчас услуги настраиваются напрямую в коде файла <code className="bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded">src/pages/ServiceCategory.tsx</code>
-              </p>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                В следующих версиях здесь будет полноценный интерфейс для:
-              </p>
-              <ul className="list-disc list-inside text-sm text-blue-700 dark:text-blue-300 mt-2 space-y-1">
-                <li>Добавления новых категорий услуг</li>
-                <li>Редактирования названий и цен</li>
-                <li>Удаления и изменения порядка услуг</li>
-                <li>Управления единицами измерения</li>
-              </ul>
-            </CardContent>
-          </Card>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {services.map(service => (
+                      <div
+                        key={service.id}
+                        className="flex items-center justify-between p-3 rounded-lg border hover:bg-secondary/50 transition-colors"
+                      >
+                        <div className="flex-1">
+                          <h4 className="font-medium">{service.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {service.price.toLocaleString()} ₽ / {service.unit}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditService(slug, service)}
+                          >
+                            <Icon name="Edit" size={16} />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteService(slug, service.id, service.name)}
+                          >
+                            <Icon name="Trash2" size={16} />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {isAddingNew ? "Добавить услугу" : "Редактировать услугу"}
+            </DialogTitle>
+            <DialogDescription>
+              Укажите название, цену и единицу измерения
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">Название услуги</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Например: Стрижка газона"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="price">Цена (₽)</Label>
+              <Input
+                id="price"
+                type="number"
+                value={formData.price}
+                onChange={e => setFormData({ ...formData, price: Number(e.target.value) })}
+                placeholder="1000"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="unit">Единица измерения</Label>
+              <Select
+                value={formData.unit}
+                onValueChange={value => setFormData({ ...formData, unit: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Выберите единицу" />
+                </SelectTrigger>
+                <SelectContent>
+                  {commonUnits.map(unit => (
+                    <SelectItem key={unit} value={unit}>
+                      {unit}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-muted-foreground mt-1">
+                Например: шт, сотка, м², дерево, куст
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={handleSaveService}>
+              {isAddingNew ? "Добавить" : "Сохранить"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

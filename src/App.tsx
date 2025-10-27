@@ -25,6 +25,7 @@ import { OrderRequestProvider } from "./contexts/OrderRequestContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { PortfolioProvider } from "./contexts/PortfolioContext";
 import { SiteSettingsProvider } from "./contexts/SiteSettingsContext";
+import { ServicesProvider } from "./contexts/ServicesContext";
 
 const queryClient = new QueryClient();
 
@@ -36,31 +37,33 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <SiteSettingsProvider>
-            <PortfolioProvider>
-              <OrderRequestProvider>
-                <OrderProvider>
-                  <Layout>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/services" element={<Services />} />
-                      <Route path="/services/:slug" element={<ServiceCategory />} />
-                      <Route path="/order" element={<Order />} />
-                      <Route path="/portfolio" element={<Portfolio />} />
-                      <Route path="/team" element={<Team />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/admin" element={<AdminDashboard />} />
-                      <Route path="/admin/login" element={<AdminLogin />} />
-                      <Route path="/admin/orders" element={<AdminOrders />} />
-                      <Route path="/admin/portfolio" element={<AdminPortfolio />} />
-                      <Route path="/admin/services" element={<AdminServices />} />
-                      <Route path="/admin/contacts" element={<AdminContacts />} />
-                      <Route path="/admin/team" element={<AdminTeam />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </Layout>
-                </OrderProvider>
-              </OrderRequestProvider>
-            </PortfolioProvider>
+            <ServicesProvider>
+              <PortfolioProvider>
+                <OrderRequestProvider>
+                  <OrderProvider>
+                    <Layout>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/services" element={<Services />} />
+                        <Route path="/services/:slug" element={<ServiceCategory />} />
+                        <Route path="/order" element={<Order />} />
+                        <Route path="/portfolio" element={<Portfolio />} />
+                        <Route path="/team" element={<Team />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/admin" element={<AdminDashboard />} />
+                        <Route path="/admin/login" element={<AdminLogin />} />
+                        <Route path="/admin/orders" element={<AdminOrders />} />
+                        <Route path="/admin/portfolio" element={<AdminPortfolio />} />
+                        <Route path="/admin/services" element={<AdminServices />} />
+                        <Route path="/admin/contacts" element={<AdminContacts />} />
+                        <Route path="/admin/team" element={<AdminTeam />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Layout>
+                  </OrderProvider>
+                </OrderRequestProvider>
+              </PortfolioProvider>
+            </ServicesProvider>
           </SiteSettingsProvider>
         </AuthProvider>
       </BrowserRouter>
