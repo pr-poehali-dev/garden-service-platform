@@ -12,7 +12,11 @@ import Order from "./pages/Order";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 import { OrderProvider } from "./contexts/OrderContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { PortfolioProvider } from "./contexts/PortfolioContext";
 
 const queryClient = new QueryClient();
 
@@ -22,19 +26,25 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <OrderProvider>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/:slug" element={<ServiceCategory />} />
-              <Route path="/order" element={<Order />} />
-              <Route path="/portfolio" element={<Portfolio />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </OrderProvider>
+        <AuthProvider>
+          <PortfolioProvider>
+            <OrderProvider>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/services/:slug" element={<ServiceCategory />} />
+                  <Route path="/order" element={<Order />} />
+                  <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            </OrderProvider>
+          </PortfolioProvider>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
