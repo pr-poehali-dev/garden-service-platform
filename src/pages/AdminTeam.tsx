@@ -29,14 +29,6 @@ const AdminTeam = () => {
     order_index: 0
   });
 
-  useEffect(() => {
-    if (!isAdmin) {
-      navigate('/admin/login');
-      return;
-    }
-    fetchTeam();
-  }, [isAdmin, navigate]);
-
   const fetchTeam = async () => {
     try {
       const response = await fetch('https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034');
@@ -55,6 +47,14 @@ const AdminTeam = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/admin/login');
+    } else {
+      fetchTeam();
+    }
+  }, [isAdmin, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,6 +132,10 @@ const AdminTeam = () => {
     setFormData({ name: '', position: '', photo: '', order_index: 0 });
     setEditingId(null);
   };
+
+  if (!isAdmin) {
+    return null;
+  }
 
   if (loading) {
     return (
