@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { items } = useOrder();
   const { contacts } = useSiteSettings();
@@ -110,9 +111,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center">
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="Админ-панель"
+                >
                   <Icon name="TreeDeciduous" className="text-background" size={24} />
-                </div>
+                </button>
                 <span className="text-2xl font-bold">Тимирязевец</span>
               </div>
               <p className="text-background/70">
