@@ -45,7 +45,9 @@ const Order = () => {
         name: item.name,
         category: item.category,
         price: item.price,
-        unit: item.unit || ''
+        unit: item.unit || '',
+        quantity: item.quantity,
+        totalPrice: item.totalPrice
       })),
       totalPrice: getTotalPrice()
     };
@@ -205,8 +207,10 @@ const Order = () => {
                           </Button>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-xs text-muted-foreground">{item.unit}</span>
-                          <span className="font-bold">{item.price.toLocaleString()} ₽</span>
+                          <span className="text-xs text-muted-foreground">
+                            {item.quantity} {item.unit} × {item.price.toLocaleString()} ₽
+                          </span>
+                          <span className="font-bold">{item.totalPrice.toLocaleString()} ₽</span>
                         </div>
                       </div>
                     ))}

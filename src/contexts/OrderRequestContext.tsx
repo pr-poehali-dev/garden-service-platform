@@ -12,6 +12,8 @@ export interface OrderRequest {
     category: string;
     price: number;
     unit: string;
+    quantity: number;
+    totalPrice: number;
   }>;
   totalPrice: number;
   status: 'new' | 'processing' | 'completed';

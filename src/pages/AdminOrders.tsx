@@ -82,7 +82,7 @@ const AdminOrders = () => {
       `${request.messenger ? `💬 Мессенджер: ${request.messenger}\n` : ''}` +
       `${request.comment ? `📝 Комментарий: ${request.comment}\n` : ''}` +
       `\n*Услуги:*\n` +
-      `${request.services.map(s => `• ${s.name} - ${s.price} ₽`).join('\n')}\n` +
+      `${request.services.map(s => `• ${s.name}: ${s.quantity} ${s.unit} × ${s.price.toLocaleString()} ₽ = ${s.totalPrice.toLocaleString()} ₽`).join('\n')}\n` +
       `\n💰 *Итого: ${request.totalPrice.toLocaleString()} ₽*`;
     
     const encodedMessage = encodeURIComponent(message);
@@ -97,7 +97,7 @@ const AdminOrders = () => {
       `${request.messenger ? `💬 Мессенджер: ${request.messenger}\n` : ''}` +
       `${request.comment ? `📝 Комментарий: ${request.comment}\n` : ''}` +
       `\nУслуги:\n` +
-      `${request.services.map(s => `• ${s.name} - ${s.price} ₽`).join('\n')}\n` +
+      `${request.services.map(s => `• ${s.name}: ${s.quantity} ${s.unit} × ${s.price.toLocaleString()} ₽ = ${s.totalPrice.toLocaleString()} ₽`).join('\n')}\n` +
       `\n💰 Итого: ${request.totalPrice.toLocaleString()} ₽`;
     
     const encodedMessage = encodeURIComponent(message);
@@ -272,9 +272,14 @@ const AdminOrders = () => {
                         <p className="text-sm text-muted-foreground mb-3">Состав заявки</p>
                         <div className="space-y-2 mb-4">
                           {request.services.map((service, idx) => (
-                            <div key={idx} className="flex justify-between text-sm border-b pb-2">
-                              <span>{service.name}</span>
-                              <span className="font-semibold">{service.price.toLocaleString()} ₽</span>
+                            <div key={idx} className="border-b pb-2">
+                              <div className="flex justify-between text-sm">
+                                <span className="font-medium">{service.name}</span>
+                                <span className="font-semibold">{service.totalPrice.toLocaleString()} ₽</span>
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {service.quantity} {service.unit} × {service.price.toLocaleString()} ₽
+                              </div>
                             </div>
                           ))}
                         </div>

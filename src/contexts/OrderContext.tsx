@@ -36,16 +36,29 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     setItems(prev => prev.filter(i => i.id !== id));
   };
 
+  const updateQuantity = (id: string, quantity: number) => {
+    setItems(prev => prev.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity,
+          totalPrice: item.price * quantity
+        };
+      }
+      return item;
+    }));
+  };
+
   const clearOrder = () => {
     setItems([]);
   };
 
   const getTotalPrice = () => {
-    return items.reduce((sum, item) => sum + item.price, 0);
+    return items.reduce((sum, item) => sum + item.totalPrice, 0);
   };
 
   return (
-    <OrderContext.Provider value={{ items, addItem, removeItem, clearOrder, getTotalPrice }}>
+    <OrderContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearOrder, getTotalPrice }}>
       {children}
     </OrderContext.Provider>
   );
