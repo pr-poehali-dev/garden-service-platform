@@ -6,31 +6,31 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const services = [
     { 
-      icon: "Palette", 
-      title: "Брендинг", 
-      description: "Создание уникального визуального стиля и айдентики" 
+      icon: "TreeDeciduous", 
+      title: "Уход за растениями", 
+      description: "Обрезка, кронирование, прививка деревьев и кустарников" 
     },
     { 
-      icon: "Layout", 
-      title: "Веб-дизайн", 
-      description: "Разработка современных сайтов и интерфейсов" 
+      icon: "Sprout", 
+      title: "Газоны и почва", 
+      description: "Стрижка, аэрация, удобрение и восстановление газонов" 
     },
     { 
-      icon: "Smartphone", 
-      title: "Мобильные приложения", 
-      description: "UX/UI дизайн для iOS и Android" 
+      icon: "Flower2", 
+      title: "Ландшафтный дизайн", 
+      description: "Озеленение, цветники, автополив и освещение участка" 
     },
     { 
-      icon: "TrendingUp", 
-      title: "Маркетинг", 
-      description: "Стратегия продвижения и контент-маркетинг" 
+      icon: "Bug", 
+      title: "Защита растений", 
+      description: "Обработка от вредителей, болезней, клещей и комаров" 
     }
   ];
 
   const team = [
-    { name: "Анна Иванова", role: "Арт-директор", photo: "https://i.pravatar.cc/300?img=1" },
-    { name: "Дмитрий Петров", role: "Веб-дизайнер", photo: "https://i.pravatar.cc/300?img=3" },
-    { name: "Елена Смирнова", role: "UX-дизайнер", photo: "https://i.pravatar.cc/300?img=5" }
+    { name: "Сергей Зеленский", role: "Главный агроном", photo: "https://i.pravatar.cc/300?img=12" },
+    { name: "Ольга Садовая", role: "Ландшафтный дизайнер", photo: "https://i.pravatar.cc/300?img=5" },
+    { name: "Игорь Лесник", role: "Специалист по деревьям", photo: "https://i.pravatar.cc/300?img=14" }
   ];
 
   return (
@@ -40,11 +40,11 @@ const Home = () => {
         
         <div className="container mx-auto px-4 text-center relative z-10 animate-fade-in">
           <h1 className="text-6xl md:text-7xl font-bold mb-6 text-foreground">
-            Создаём цифровые<br />
-            <span className="text-primary">шедевры</span>
+            Ваш сад —<br />
+            <span className="text-primary">наша забота</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Агентство креативного дизайна и разработки
+            Профессиональный уход за садом и ландшафтное обслуживание
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link to="/portfolio">
@@ -66,7 +66,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Наши услуги</h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
-            Полный спектр решений для вашего бизнеса
+            Комплексный уход за вашим участком круглый год
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -102,7 +102,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Наша команда</h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
-            Профессионалы, которые создают результат
+            Опытные специалисты с профильным образованием
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -130,14 +130,14 @@ const Home = () => {
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Готовы начать проект?
+            Хотите красивый участок?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Свяжитесь с нами и расскажите о вашей идее. Мы поможем воплотить её в жизнь.
+            Оставьте заявку, и мы приедем на бесплатную консультацию с выездом на участок.
           </p>
           <Link to="/contact">
             <Button size="lg" variant="secondary" className="text-lg px-8">
-              Обсудить проект
+              Вызвать специалиста
               <Icon name="MessageSquare" className="ml-2" size={20} />
             </Button>
           </Link>

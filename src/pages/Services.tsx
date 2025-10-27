@@ -6,85 +6,125 @@ import { Link } from "react-router-dom";
 const Services = () => {
   const services = [
     {
-      icon: "Palette",
-      title: "Брендинг и айдентика",
-      description: "Разработка фирменного стиля, логотипа и брендбука",
+      icon: "TreeDeciduous",
+      title: "Уход за зелёными насаждениями",
+      description: "Профессиональный уход за деревьями и кустарниками",
       features: [
-        "Разработка логотипа",
-        "Фирменный стиль",
-        "Брендбук",
-        "Гайдлайны"
+        "Санитарная и формирующая обрезка",
+        "Омолаживающая обрезка",
+        "Кронирование деревьев",
+        "Топиарная стрижка кустарников",
+        "Прививка и перепрививка",
+        "Валка и выкорчёвывание"
       ],
-      price: "от 50 000 ₽"
+      price: "от 1 500 ₽"
     },
     {
-      icon: "Layout",
-      title: "Веб-дизайн",
-      description: "Создание современных и функциональных сайтов",
+      icon: "Bug",
+      title: "Обработка растений и участка",
+      description: "Защита от вредителей и болезней",
       features: [
-        "Дизайн лендинга",
-        "Корпоративный сайт",
-        "Интернет-магазин",
-        "Адаптивная верстка"
+        "Обработка от вредителей и болезней",
+        "Внекорневая подкормка",
+        "Обработка от клещей и комаров",
+        "Борьба с грызунами",
+        "Дезинфекция теплиц",
+        "Обработка газона гербицидами"
       ],
-      price: "от 80 000 ₽"
+      price: "от 2 000 ₽"
     },
     {
-      icon: "Smartphone",
-      title: "Мобильные приложения",
-      description: "UX/UI дизайн для iOS и Android платформ",
+      icon: "Sprout",
+      title: "Газоны и почва",
+      description: "Создание и уход за идеальным газоном",
       features: [
-        "Прототипирование",
-        "UI дизайн",
-        "Анимации",
-        "Design System"
+        "Стрижка газона",
+        "Устройство посевного газона",
+        "Укладка рулонного газона",
+        "Аэрация и вертикуляция",
+        "Подкормка и мульчирование",
+        "Ремонт газона"
       ],
-      price: "от 120 000 ₽"
+      price: "от 800 ₽"
     },
     {
-      icon: "Paintbrush",
-      title: "Графический дизайн",
-      description: "Создание рекламных материалов и иллюстраций",
+      icon: "Flower2",
+      title: "Посадочные работы",
+      description: "Посадка деревьев, кустарников и цветов",
       features: [
-        "Баннеры и реклама",
-        "Иллюстрации",
-        "Презентации",
-        "Печатная продукция"
+        "Посадка деревьев и крупномеров",
+        "Посадка кустарников",
+        "Посадка цветов и рассады",
+        "Пересадка растений",
+        "Подготовка клумб и грядок",
+        "Внесение удобрений"
+      ],
+      price: "от 1 000 ₽"
+    },
+    {
+      icon: "Home",
+      title: "Благоустройство и ландшафт",
+      description: "Создание уникального ландшафта",
+      features: [
+        "Ландшафтное проектирование",
+        "Озеленение участка",
+        "Устройство цветников и альпийских горок",
+        "Система автополива",
+        "Ландшафтное освещение",
+        "Фитодизайн"
       ],
       price: "от 15 000 ₽"
     },
     {
-      icon: "TrendingUp",
-      title: "Маркетинг и SMM",
-      description: "Продвижение бренда в цифровой среде",
+      icon: "Trash2",
+      title: "Уборка участка",
+      description: "Поддержание чистоты и порядка",
       features: [
-        "Стратегия продвижения",
-        "Контент-план",
-        "Ведение соцсетей",
-        "Таргетированная реклама"
+        "Покос травы",
+        "Уборка листвы",
+        "Утилизация веток",
+        "Измельчение отходов",
+        "Вывоз мусора",
+        "Очистка дорожек"
       ],
-      price: "от 40 000 ₽/мес"
+      price: "от 600 ₽"
     },
     {
-      icon: "Video",
-      title: "Видеопродакшн",
-      description: "Создание рекламных и презентационных роликов",
+      icon: "Snowflake",
+      title: "Зимнее обслуживание",
+      description: "Уход за участком в холодное время года",
       features: [
-        "Съемка видео",
-        "Монтаж",
-        "Моушн-дизайн",
-        "3D анимация"
+        "Уборка снега (ручная и механическая)",
+        "Обработка дорожек от льда",
+        "Чистка крыш от снега",
+        "Защита растений на зиму",
+        "Удаление сосулек",
+        "Абонементное обслуживание"
       ],
-      price: "от 100 000 ₽"
+      price: "от 1 200 ₽"
+    },
+    {
+      icon: "Calendar",
+      title: "Комплексное обслуживание",
+      description: "Годовое обслуживание участка",
+      features: [
+        "Индивидуальный план ухода",
+        "Регулярные выезды",
+        "Сезонные работы",
+        "Консультации агронома",
+        "Скидка до 30%",
+        "Приоритетное обслуживание"
+      ],
+      price: "от 25 000 ₽/мес"
     }
   ];
 
   const workProcess = [
-    { step: "01", title: "Брифинг", desc: "Изучаем вашу задачу и цели" },
-    { step: "02", title: "Исследование", desc: "Анализируем рынок и конкурентов" },
-    { step: "03", title: "Концепция", desc: "Предлагаем креативное решение" },
-    { step: "04", title: "Разработка", desc: "Воплощаем идею в жизнь" },
-    { step: "05", title: "Презентация", desc: "Передаем готовый проект" }
+    { step: "01", title: "Консультация", desc: "Выезд на участок и оценка объёма работ" },
+    { step: "02", title: "План работ", desc: "Составление индивидуального плана" },
+    { step: "03", title: "Согласование", desc: "Утверждение сроков и стоимости" },
+    { step: "04", title: "Выполнение", desc: "Профессиональное проведение работ" },
+    { step: "05", title: "Контроль", desc: "Приёмка и гарантия качества" }
   ];
 
   return (
@@ -96,7 +136,7 @@ const Services = () => {
               Услуги и цены
             </h1>
             <p className="text-xl text-muted-foreground">
-              Предлагаем полный спектр услуг для развития вашего бизнеса в цифровой среде
+              Полный спектр садовых работ и ландшафтного обслуживания для вашего участка
             </p>
           </div>
         </div>
@@ -143,7 +183,7 @@ const Services = () => {
             Как мы работаем
           </h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
-            Прозрачный процесс от идеи до результата
+            Прозрачный процесс от заявки до идеального результата
           </p>
 
           <div className="max-w-5xl mx-auto">
@@ -166,17 +206,71 @@ const Services = () => {
         </div>
       </section>
 
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-2 border-primary">
+              <CardHeader>
+                <CardTitle className="text-3xl text-center mb-2">
+                  Почему выбирают нас?
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Award" className="text-primary" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Опыт более 10 лет</h3>
+                      <p className="text-sm text-muted-foreground">Выполнили более 500 проектов</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Users" className="text-primary" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Профильное образование</h3>
+                      <p className="text-sm text-muted-foreground">Все специалисты — дипломированные агрономы</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Shield" className="text-primary" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Гарантия качества</h3>
+                      <p className="text-sm text-muted-foreground">Гарантия на все виды работ до 2 лет</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name="Wrench" className="text-primary" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Своё оборудование</h3>
+                      <p className="text-sm text-muted-foreground">Современная техника и инструменты</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Нужна консультация?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Оставьте заявку, и мы свяжемся с вами в течение часа
+            Оставьте заявку на бесплатный выезд специалиста для оценки участка
           </p>
           <Link to="/contact">
             <Button size="lg" variant="secondary" className="text-lg px-8">
-              Получить консультацию
+              Вызвать специалиста
               <Icon name="Phone" className="ml-2" size={20} />
             </Button>
           </Link>

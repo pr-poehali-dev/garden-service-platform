@@ -23,9 +23,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 group">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Icon name="Sparkles" className="text-primary-foreground" size={24} />
+                <Icon name="TreeDeciduous" className="text-primary-foreground" size={24} />
               </div>
-              <span className="text-2xl font-bold">Creative</span>
+              <span className="text-2xl font-bold">ГринСервис</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-1">
@@ -101,7 +101,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <span className="text-2xl font-bold">Creative</span>
               </div>
               <p className="text-background/70">
-                Креативное агентство полного цикла
+                Профессиональный уход за садом и участком
               </p>
             </div>
 
@@ -157,7 +157,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <div className="border-t border-background/20 pt-8 text-center text-background/60">
-            <p>© 2024 Creative Agency. Все права защищены.</p>
+            <p>© 2024 ГринСервис. Все права защищены.</p>
           </div>
         </div>
       </footer>
