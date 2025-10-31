@@ -307,18 +307,58 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   const getTeamMember = (id: number) => teamMembers.find(m => m.id === id);
 
   const createTeamMember = async (member: Omit<ContentTeamMember, 'id' | 'created_at'>) => {
-    const newMember: ContentTeamMember = {
-      ...member,
-      id: Date.now(),
-      created_at: new Date().toISOString()
-    };
-    setTeamMembers(prev => [...prev, newMember]);
+    try {
+      const response = await fetch('https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: member.name,
+          position: member.role,
+          photo: member.photo,
+          order_index: member.sort_order
+        })
+      });
+      if (!response.ok) throw new Error('Ошибка создания');
+      const data = await response.json();
+      const newMember: ContentTeamMember = {
+        id: data.id,
+        name: data.name,
+        role: data.position,
+        photo: data.photo,
+        visible: true,
+        sort_order: data.order_index,
+        created_at: new Date().toISOString()
+      };
+      setTeamMembers(prev => [...prev, newMember]);
+    } catch (err) {
+      console.error('Failed to create team member:', err);
+    }
   };
 
   const updateTeamMember = async (id: number, updates: Partial<ContentTeamMember>) => {
-    setTeamMembers(prev => prev.map(m => 
-      m.id === id ? { ...m, ...updates } : m
-    ));
+    try {
+      const member = teamMembers.find(m => m.id === id);
+      if (!member) return;
+      
+      const response = await fetch('https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          name: updates.name ?? member.name,
+          position: updates.role ?? member.role,
+          photo: updates.photo ?? member.photo,
+          order_index: updates.sort_order ?? member.sort_order
+        })
+      });
+      if (!response.ok) throw new Error('Ошибка обновления');
+      
+      setTeamMembers(prev => prev.map(m => 
+        m.id === id ? { ...m, ...updates } : m
+      ));
+    } catch (err) {
+      console.error('Failed to update team member:', err);
+    }
   };
 
   const toggleTeamMemberVisibility = async (id: number) => {
