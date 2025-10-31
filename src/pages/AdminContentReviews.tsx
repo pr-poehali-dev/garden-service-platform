@@ -27,6 +27,8 @@ const AdminContentReviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
   const [loading, setLoading] = useState(true);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState("");
 
   useEffect(() => {
     if (!isAdmin) {
@@ -259,7 +261,11 @@ const AdminContentReviews = () => {
                         key={idx}
                         src={photo}
                         alt={`Фото ${idx + 1}`}
-                        className="w-full h-24 object-cover rounded-lg"
+                        className="w-full h-24 object-cover rounded-lg cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => {
+                          setLightboxImage(photo);
+                          setLightboxOpen(true);
+                        }}
                       />
                     ))}
                   </div>
@@ -309,6 +315,26 @@ const AdminContentReviews = () => {
           )}
         </div>
       </div>
+
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white hover:text-gray-300"
+            onClick={() => setLightboxOpen(false)}
+          >
+            <Icon name="X" size={32} />
+          </button>
+          <img
+            src={lightboxImage}
+            alt="Увеличенное фото"
+            className="max-w-full max-h-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };

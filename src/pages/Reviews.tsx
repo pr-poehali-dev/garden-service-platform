@@ -33,6 +33,8 @@ const Reviews = () => {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState("");
 
   useEffect(() => {
     fetchReviews();
@@ -205,6 +207,10 @@ const Reviews = () => {
                           src={photo}
                           alt={`Фото ${idx + 1}`}
                           className="w-full h-32 object-cover rounded-lg hover:scale-105 transition-transform cursor-pointer"
+                          onClick={() => {
+                            setLightboxImage(photo);
+                            setLightboxOpen(true);
+                          }}
                         />
                       ))}
                     </div>
@@ -357,6 +363,26 @@ const Reviews = () => {
           </div>
         </div>
       </div>
+
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white hover:text-gray-300"
+            onClick={() => setLightboxOpen(false)}
+          >
+            <Icon name="X" size={32} />
+          </button>
+          <img
+            src={lightboxImage}
+            alt="Увеличенное фото"
+            className="max-w-full max-h-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };
