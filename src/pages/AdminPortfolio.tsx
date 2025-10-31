@@ -8,6 +8,8 @@ import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePortfolio, PortfolioPost } from "@/contexts/PortfolioContext";
 import { useToast } from "@/hooks/use-toast";
+import ImageUploader from "@/components/ImageUploader";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AdminPortfolio = () => {
   const { isAdmin } = useAuth();
@@ -149,15 +151,28 @@ const AdminPortfolio = () => {
 
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        URL изображения <span className="text-destructive">*</span>
+                        Изображение <span className="text-destructive">*</span>
                       </label>
-                      <Input
-                        type="url"
-                        placeholder="https://example.com/image.jpg"
-                        value={formData.image}
-                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        required
-                      />
+                      <Tabs defaultValue="upload" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="upload">Загрузить файл</TabsTrigger>
+                          <TabsTrigger value="url">Вставить URL</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="upload" className="mt-3">
+                          <ImageUploader
+                            value={formData.image}
+                            onChange={(dataUrl) => setFormData({ ...formData, image: dataUrl })}
+                          />
+                        </TabsContent>
+                        <TabsContent value="url" className="mt-3">
+                          <Input
+                            type="url"
+                            placeholder="https://example.com/image.jpg"
+                            value={formData.image}
+                            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                          />
+                        </TabsContent>
+                      </Tabs>
                     </div>
 
                     <div>

@@ -5,11 +5,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { Badge } from '@/components/ui/badge';
+import ImageUploader from '@/components/ImageUploader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Field {
   name: string;
   label: string;
-  type: 'text' | 'textarea' | 'number' | 'select' | 'images' | 'datetime';
+  type: 'text' | 'textarea' | 'number' | 'select' | 'images' | 'datetime' | 'image';
   placeholder?: string;
   required?: boolean;
   options?: Array<{ value: string; label: string }>;
@@ -119,6 +121,31 @@ export function ContentForm({
               Введите URL изображения и нажмите Enter
             </p>
           </div>
+        );
+
+      case 'image':
+        return (
+          <Tabs defaultValue="upload" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="upload">Загрузить файл</TabsTrigger>
+              <TabsTrigger value="url">Вставить URL</TabsTrigger>
+            </TabsList>
+            <TabsContent value="upload" className="mt-3">
+              <ImageUploader
+                value={value as string || ''}
+                onChange={(dataUrl) => onChange(field.name, dataUrl)}
+              />
+            </TabsContent>
+            <TabsContent value="url" className="mt-3">
+              <Input
+                id={field.name}
+                type="url"
+                placeholder={field.placeholder || 'https://example.com/image.jpg'}
+                value={value as string || ''}
+                onChange={(e) => onChange(field.name, e.target.value)}
+              />
+            </TabsContent>
+          </Tabs>
         );
 
       default:

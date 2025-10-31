@@ -107,7 +107,7 @@ export default function AdminContentTeam() {
   const fields = [
     { name: 'name', label: 'Имя сотрудника', type: 'text' as const, required: true, placeholder: 'Иванов Иван' },
     { name: 'role', label: 'Должность', type: 'text' as const, required: true, placeholder: 'Главный агроном' },
-    { name: 'photo', label: 'URL фотографии', type: 'text' as const, required: true, placeholder: 'https://...' },
+    { name: 'photo', label: 'Фотография', type: 'image' as const, required: true, placeholder: 'https://...' },
     { name: 'phone', label: 'Телефон', type: 'text' as const, placeholder: '+7 (999) 123-45-67' },
     { name: 'telegram', label: 'Telegram', type: 'text' as const, placeholder: '@username' },
     { name: 'sort_order', label: 'Порядок сортировки', type: 'number' as const }

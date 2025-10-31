@@ -10,6 +10,8 @@ import Icon from '@/components/ui/icon';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import ImageUploader from '@/components/ImageUploader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function AdminContentHomepage() {
   const navigate = useNavigate();
@@ -119,17 +121,27 @@ export default function AdminContentHomepage() {
               />
             </div>
             <div>
-              <Label>URL логотипа</Label>
-              <Input
-                placeholder="https://..."
-                value={logo}
-                onChange={(e) => setLogo(e.target.value)}
-              />
-              {logo && (
-                <div className="mt-2">
-                  <img src={logo} alt="Logo" className="h-12 object-contain" />
-                </div>
-              )}
+              <Label>Логотип</Label>
+              <Tabs defaultValue="upload" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="upload">Загрузить файл</TabsTrigger>
+                  <TabsTrigger value="url">Вставить URL</TabsTrigger>
+                </TabsList>
+                <TabsContent value="upload" className="mt-3">
+                  <ImageUploader
+                    value={logo}
+                    onChange={setLogo}
+                  />
+                </TabsContent>
+                <TabsContent value="url" className="mt-3">
+                  <Input
+                    type="url"
+                    placeholder="https://example.com/logo.png"
+                    value={logo}
+                    onChange={(e) => setLogo(e.target.value)}
+                  />
+                </TabsContent>
+              </Tabs>
             </div>
           </CardContent>
         </Card>
@@ -156,17 +168,27 @@ export default function AdminContentHomepage() {
               />
             </div>
             <div>
-              <Label>URL фонового изображения</Label>
-              <Input
-                placeholder="https://..."
-                value={heroBg}
-                onChange={(e) => setHeroBg(e.target.value)}
-              />
-              {heroBg && (
-                <div className="mt-2">
-                  <img src={heroBg} alt="Hero background" className="w-full h-32 object-cover rounded" />
-                </div>
-              )}
+              <Label>Фоновое изображение</Label>
+              <Tabs defaultValue="upload" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="upload">Загрузить файл</TabsTrigger>
+                  <TabsTrigger value="url">Вставить URL</TabsTrigger>
+                </TabsList>
+                <TabsContent value="upload" className="mt-3">
+                  <ImageUploader
+                    value={heroBg}
+                    onChange={setHeroBg}
+                  />
+                </TabsContent>
+                <TabsContent value="url" className="mt-3">
+                  <Input
+                    type="url"
+                    placeholder="https://example.com/hero.jpg"
+                    value={heroBg}
+                    onChange={(e) => setHeroBg(e.target.value)}
+                  />
+                </TabsContent>
+              </Tabs>
             </div>
           </CardContent>
         </Card>
