@@ -73,15 +73,15 @@ const Home = () => {
             {homepage?.hero_subtitle || "Профессиональный уход за садом и ландшафтное обслуживание"}
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link to="/portfolio">
+            <Link to="/services/seasons">
               <Button size="lg" className="text-lg px-8">
-                Наши работы
+                Востребованные услуги
                 <Icon name="ArrowRight" className="ml-2" size={20} />
               </Button>
             </Link>
             <Link to="/services">
               <Button size="lg" variant="outline" className="text-lg px-8">
-                Услуги и цены
+                Все услуги и цены
               </Button>
             </Link>
           </div>
