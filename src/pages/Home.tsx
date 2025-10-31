@@ -90,10 +90,7 @@ const Home = () => {
 
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Наши услуги</h2>
-          <p className="text-center text-muted-foreground mb-12 text-lg">
-            Комплексный уход за вашим участком круглый год
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Наши услуги</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
