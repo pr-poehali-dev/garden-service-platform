@@ -28,6 +28,13 @@ const AdminContent = () => {
       color: "bg-green-500"
     },
     {
+      title: "Блоки услуг",
+      description: "Редактирование категорий на странице услуг",
+      icon: "Briefcase",
+      path: "/admin/services",
+      color: "bg-emerald-500"
+    },
+    {
       title: "Портфолио / Посты",
       description: "Публикации, галереи работ и новости",
       icon: "Image",

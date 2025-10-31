@@ -74,38 +74,6 @@ const AdminDashboard = () => {
       path: "/admin/content",
       badge: null,
       color: "bg-indigo-500"
-    },
-    {
-      title: "Портфолио",
-      description: `Управление постами (${posts.length})`,
-      icon: "Image",
-      path: "/admin/portfolio",
-      badge: null,
-      color: "bg-purple-500"
-    },
-    {
-      title: "Блоки услуг",
-      description: "Редактирование категорий на странице услуг",
-      icon: "Briefcase",
-      path: "/admin/services",
-      badge: null,
-      color: "bg-green-500"
-    },
-    {
-      title: "Наша команда",
-      description: "Управление карточками сотрудников",
-      icon: "Users",
-      path: "/admin/team",
-      badge: null,
-      color: "bg-teal-500"
-    },
-    {
-      title: "Контакты",
-      description: "Редактирование контактной информации",
-      icon: "Phone",
-      path: "/admin/contacts",
-      badge: null,
-      color: "bg-orange-500"
     }
   ];
 
@@ -166,22 +134,18 @@ const AdminDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-secondary/50 rounded-lg">
                     <p className="text-3xl font-bold text-blue-500">{requests.length}</p>
                     <p className="text-sm text-muted-foreground mt-1">Всего заявок</p>
                   </div>
                   <div className="text-center p-4 bg-secondary/50 rounded-lg">
-                    <p className="text-3xl font-bold text-purple-500">{posts.length}</p>
-                    <p className="text-sm text-muted-foreground mt-1">Постов в портфолио</p>
-                  </div>
-                  <div className="text-center p-4 bg-secondary/50 rounded-lg">
-                    <p className="text-3xl font-bold text-green-500">8</p>
-                    <p className="text-sm text-muted-foreground mt-1">Категорий услуг</p>
-                  </div>
-                  <div className="text-center p-4 bg-secondary/50 rounded-lg">
                     <p className="text-3xl font-bold text-orange-500">{newOrdersCount}</p>
                     <p className="text-sm text-muted-foreground mt-1">Новых заявок</p>
+                  </div>
+                  <div className="text-center p-4 bg-secondary/50 rounded-lg">
+                    <p className="text-3xl font-bold text-purple-500">{posts.length}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Постов в портфолио</p>
                   </div>
                 </div>
               </CardContent>
