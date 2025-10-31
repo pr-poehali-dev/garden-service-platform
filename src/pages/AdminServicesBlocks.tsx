@@ -208,17 +208,17 @@ const AdminServicesBlocks = () => {
                     <CardDescription>{category.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex gap-2">
+                    <div className="space-y-2">
                       <Dialog open={editingSlug === slug} onOpenChange={(open) => !open && setEditingSlug(null)}>
                         <DialogTrigger asChild>
                           <Button
                             size="sm"
                             variant="outline"
-                            className="flex-1"
+                            className="w-full"
                             onClick={() => handleEditCategory(slug)}
                           >
                             <Icon name="Edit" size={16} className="mr-1" />
-                            Редактировать
+                            Редактировать блок
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -268,12 +268,24 @@ const AdminServicesBlocks = () => {
                         </DialogContent>
                       </Dialog>
                       
+                      <Link to={`/admin/services/${slug}`} className="block">
+                        <Button
+                          size="sm"
+                          className="w-full"
+                        >
+                          <Icon name="FolderOpen" size={16} className="mr-1" />
+                          Открыть блок
+                        </Button>
+                      </Link>
+                      
                       <Button
                         size="sm"
                         variant="destructive"
+                        className="w-full"
                         onClick={() => handleDeleteCategory(slug)}
                       >
-                        <Icon name="Trash2" size={16} />
+                        <Icon name="Trash2" size={16} className="mr-1" />
+                        Удалить блок
                       </Button>
                     </div>
                     <div className="mt-3 text-xs text-muted-foreground">
@@ -311,22 +323,35 @@ const AdminServicesBlocks = () => {
                       <CardDescription>{category.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex gap-2">
+                      <div className="space-y-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          className="flex-1"
+                          className="w-full"
                           onClick={() => handleEditCategory(slug)}
                         >
                           <Icon name="Edit" size={16} className="mr-1" />
-                          Редактировать
+                          Редактировать блок
                         </Button>
+                        
+                        <Link to={`/admin/services/${slug}`} className="block">
+                          <Button
+                            size="sm"
+                            className="w-full"
+                          >
+                            <Icon name="FolderOpen" size={16} className="mr-1" />
+                            Открыть блок
+                          </Button>
+                        </Link>
+                        
                         <Button
                           size="sm"
                           variant="destructive"
+                          className="w-full"
                           onClick={() => handleDeleteCategory(slug)}
                         >
-                          <Icon name="Trash2" size={16} />
+                          <Icon name="Trash2" size={16} className="mr-1" />
+                          Удалить блок
                         </Button>
                       </div>
                       <div className="mt-3 text-xs text-muted-foreground">

@@ -21,7 +21,6 @@ import AdminServices from "./pages/AdminServices";
 import AdminContacts from "./pages/AdminContacts";
 import AdminTeam from "./pages/AdminTeam";
 import AdminContent from "./pages/AdminContent";
-import AdminContentServices from "./pages/AdminContentServices";
 import AdminContentPosts from "./pages/AdminContentPosts";
 import AdminContentTeam from "./pages/AdminContentTeam";
 import AdminContentContact from "./pages/AdminContentContact";
@@ -30,6 +29,7 @@ import AdminIntegrations from "./pages/AdminIntegrations";
 import AdminApplications from "./pages/AdminApplications";
 import AdminOrdersNew from "./pages/AdminOrdersNew";
 import AdminServicesBlocks from "./pages/AdminServicesBlocks";
+import AdminServicesCategoryEdit from "./pages/AdminServicesCategoryEdit";
 import { OrderProvider } from "./contexts/OrderContext";
 import { OrderRequestProvider } from "./contexts/OrderRequestContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -67,11 +67,10 @@ const App = () => (
                           <Route path="/admin/orders" element={<AdminOrders />} />
                           <Route path="/admin/portfolio" element={<AdminPortfolio />} />
                           <Route path="/admin/services" element={<AdminServicesBlocks />} />
-                          <Route path="/admin/services-old" element={<AdminServices />} />
+                          <Route path="/admin/services/:slug" element={<AdminServicesCategoryEdit />} />
                           <Route path="/admin/contacts" element={<AdminContacts />} />
                           <Route path="/admin/team" element={<AdminTeam />} />
                           <Route path="/admin/content" element={<AdminContent />} />
-                          <Route path="/admin/content/services" element={<AdminContentServices />} />
                           <Route path="/admin/content/posts" element={<AdminContentPosts />} />
                           <Route path="/admin/content/team" element={<AdminContentTeam />} />
                           <Route path="/admin/content/contact" element={<AdminContentContact />} />

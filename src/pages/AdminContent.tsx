@@ -21,15 +21,8 @@ const AdminContent = () => {
 
   const contentSections = [
     {
-      title: "Услуги",
-      description: "Управление каталогом услуг, ценами и описаниями",
-      icon: "Wrench",
-      path: "/admin/content/services",
-      color: "bg-green-500"
-    },
-    {
       title: "Блоки услуг",
-      description: "Редактирование категорий на странице услуг",
+      description: "Управление категориями и услугами",
       icon: "Briefcase",
       path: "/admin/services",
       color: "bg-emerald-500"
