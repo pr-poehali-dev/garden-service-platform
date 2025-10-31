@@ -281,25 +281,22 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const mockTeam: ContentTeamMember[] = [
-        {
-          id: 1,
-          name: 'Мелихов Никита',
-          role: 'Руководитель',
-          photo: 'https://i.pravatar.cc/400?img=12',
-          visible: true,
-          sort_order: 1
-        },
-        {
-          id: 2,
-          name: 'Гвасалия Фредо',
-          role: 'Главный агроном',
-          photo: 'https://i.pravatar.cc/400?img=33',
-          visible: true,
-          sort_order: 2
-        }
-      ];
-      setTeamMembers(includeHidden ? mockTeam : mockTeam.filter(m => m.visible && !m.removed_at));
+      const response = await fetch('https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034');
+      if (!response.ok) throw new Error('Ошибка загрузки команды');
+      const data = await response.json();
+      
+      const members: ContentTeamMember[] = data.map((m: any) => ({
+        id: m.id,
+        name: m.name,
+        role: m.position,
+        photo: m.photo,
+        visible: true,
+        sort_order: m.order_index,
+        removed_at: m.removed_at,
+        created_at: m.created_at
+      }));
+      
+      setTeamMembers(includeHidden ? members : members.filter(m => m.visible && !m.removed_at));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка загрузки команды');
     } finally {
@@ -332,7 +329,15 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const softRemoveTeamMember = async (id: number) => {
-    await updateTeamMember(id, { removed_at: new Date().toISOString() });
+    try {
+      const response = await fetch(`https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034?id=${id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error('Ошибка удаления');
+      await updateTeamMember(id, { removed_at: new Date().toISOString() });
+    } catch (err) {
+      console.error('Failed to remove team member:', err);
+    }
   };
 
   const restoreTeamMember = async (id: number) => {
