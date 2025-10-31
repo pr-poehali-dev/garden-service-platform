@@ -17,9 +17,6 @@ const Portfolio = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Наши работы
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Реализованные проекты по уходу за садом и ландшафтному дизайну
-            </p>
           </div>
         </div>
       </section>
