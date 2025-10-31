@@ -12,6 +12,7 @@ import Order from "./pages/Order";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
 import Team from "./pages/Team";
+import Reviews from "./pages/Reviews";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
@@ -61,6 +62,7 @@ const App = () => (
                           <Route path="/order" element={<Order />} />
                           <Route path="/portfolio" element={<Portfolio />} />
                           <Route path="/team" element={<Team />} />
+                          <Route path="/reviews" element={<Reviews />} />
                           <Route path="/contact" element={<Contact />} />
                           <Route path="/admin" element={<AdminDashboard />} />
                           <Route path="/admin/login" element={<AdminLogin />} />
