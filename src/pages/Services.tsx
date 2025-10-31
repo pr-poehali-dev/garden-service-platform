@@ -23,9 +23,6 @@ const Services = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Услуги и цены
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Выберите категорию услуг для просмотра цен и добавления в заявку
-            </p>
           </div>
         </div>
       </section>
