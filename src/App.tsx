@@ -26,6 +26,7 @@ import AdminContentPosts from "./pages/AdminContentPosts";
 import AdminContentTeam from "./pages/AdminContentTeam";
 import AdminContentContact from "./pages/AdminContentContact";
 import AdminContentHomepage from "./pages/AdminContentHomepage";
+import AdminContentReviews from "./pages/AdminContentReviews";
 import AdminIntegrations from "./pages/AdminIntegrations";
 import AdminApplications from "./pages/AdminApplications";
 import AdminOrdersNew from "./pages/AdminOrdersNew";
@@ -77,6 +78,7 @@ const App = () => (
                           <Route path="/admin/content/team" element={<AdminContentTeam />} />
                           <Route path="/admin/content/contact" element={<AdminContentContact />} />
                           <Route path="/admin/content/homepage" element={<AdminContentHomepage />} />
+                          <Route path="/admin/content/reviews" element={<AdminContentReviews />} />
                           <Route path="/admin/integrations" element={<AdminIntegrations />} />
                           <Route path="/admin/applications" element={<AdminApplications />} />
                           <Route path="/admin/orders-new" element={<AdminOrdersNew />} />

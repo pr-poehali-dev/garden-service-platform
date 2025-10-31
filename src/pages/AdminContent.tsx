@@ -35,6 +35,13 @@ const AdminContent = () => {
       color: "bg-purple-500"
     },
     {
+      title: "Отзывы клиентов",
+      description: "Модерация и управление отзывами",
+      icon: "MessageSquare",
+      path: "/admin/content/reviews",
+      color: "bg-yellow-500"
+    },
+    {
       title: "Наша команда",
       description: "Карточки сотрудников и контакты",
       icon: "Users",
