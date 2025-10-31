@@ -124,22 +124,6 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Хотите красивый участок?
-          </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Оставьте заявку, и мы приедем на бесплатную консультацию с выездом на участок.
-          </p>
-          <Link to="/contact">
-            <Button size="lg" variant="secondary" className="text-lg px-8">
-              Вызвать специалиста
-              <Icon name="MessageSquare" className="ml-2" size={20} />
-            </Button>
-          </Link>
-        </div>
-      </section>
     </div>
   );
 };
