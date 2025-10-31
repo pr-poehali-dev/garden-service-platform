@@ -46,6 +46,14 @@ const AdminDashboard = () => {
       color: "bg-blue-500"
     },
     {
+      title: "Контент",
+      description: "Управление всем контентом сайта",
+      icon: "FileText",
+      path: "/admin/content",
+      badge: null,
+      color: "bg-indigo-500"
+    },
+    {
       title: "Портфолио",
       description: `Управление постами (${posts.length})`,
       icon: "Image",

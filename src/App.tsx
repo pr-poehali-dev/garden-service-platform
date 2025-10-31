@@ -20,12 +20,19 @@ import AdminPortfolio from "./pages/AdminPortfolio";
 import AdminServices from "./pages/AdminServices";
 import AdminContacts from "./pages/AdminContacts";
 import AdminTeam from "./pages/AdminTeam";
+import AdminContent from "./pages/AdminContent";
+import AdminContentServices from "./pages/AdminContentServices";
+import AdminContentPosts from "./pages/AdminContentPosts";
+import AdminContentTeam from "./pages/AdminContentTeam";
+import AdminContentContact from "./pages/AdminContentContact";
+import AdminContentHomepage from "./pages/AdminContentHomepage";
 import { OrderProvider } from "./contexts/OrderContext";
 import { OrderRequestProvider } from "./contexts/OrderRequestContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { PortfolioProvider } from "./contexts/PortfolioContext";
 import { SiteSettingsProvider } from "./contexts/SiteSettingsContext";
 import { ServicesProvider } from "./contexts/ServicesContext";
+import { AdminContentProvider } from "./contexts/AdminContentContext";
 
 const queryClient = new QueryClient();
 
@@ -41,25 +48,33 @@ const App = () => (
               <PortfolioProvider>
                 <OrderRequestProvider>
                   <OrderProvider>
-                    <Layout>
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/services" element={<Services />} />
-                        <Route path="/services/:slug" element={<ServiceCategory />} />
-                        <Route path="/order" element={<Order />} />
-                        <Route path="/portfolio" element={<Portfolio />} />
-                        <Route path="/team" element={<Team />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/admin" element={<AdminDashboard />} />
-                        <Route path="/admin/login" element={<AdminLogin />} />
-                        <Route path="/admin/orders" element={<AdminOrders />} />
-                        <Route path="/admin/portfolio" element={<AdminPortfolio />} />
-                        <Route path="/admin/services" element={<AdminServices />} />
-                        <Route path="/admin/contacts" element={<AdminContacts />} />
-                        <Route path="/admin/team" element={<AdminTeam />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </Layout>
+                    <AdminContentProvider>
+                      <Layout>
+                        <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route path="/services" element={<Services />} />
+                          <Route path="/services/:slug" element={<ServiceCategory />} />
+                          <Route path="/order" element={<Order />} />
+                          <Route path="/portfolio" element={<Portfolio />} />
+                          <Route path="/team" element={<Team />} />
+                          <Route path="/contact" element={<Contact />} />
+                          <Route path="/admin" element={<AdminDashboard />} />
+                          <Route path="/admin/login" element={<AdminLogin />} />
+                          <Route path="/admin/orders" element={<AdminOrders />} />
+                          <Route path="/admin/portfolio" element={<AdminPortfolio />} />
+                          <Route path="/admin/services" element={<AdminServices />} />
+                          <Route path="/admin/contacts" element={<AdminContacts />} />
+                          <Route path="/admin/team" element={<AdminTeam />} />
+                          <Route path="/admin/content" element={<AdminContent />} />
+                          <Route path="/admin/content/services" element={<AdminContentServices />} />
+                          <Route path="/admin/content/posts" element={<AdminContentPosts />} />
+                          <Route path="/admin/content/team" element={<AdminContentTeam />} />
+                          <Route path="/admin/content/contact" element={<AdminContentContact />} />
+                          <Route path="/admin/content/homepage" element={<AdminContentHomepage />} />
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </Layout>
+                    </AdminContentProvider>
                   </OrderProvider>
                 </OrderRequestProvider>
               </PortfolioProvider>

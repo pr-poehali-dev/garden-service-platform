@@ -1,0 +1,37 @@
+{
+  "tests": [
+    {
+      "name": "Get all services",
+      "method": "GET",
+      "path": "/services",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "items": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get all posts",
+      "method": "GET",
+      "path": "/posts",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "items": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get team members",
+      "method": "GET",
+      "path": "/team",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "items": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

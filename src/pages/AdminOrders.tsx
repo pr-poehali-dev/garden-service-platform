@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,10 @@ import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrderRequests, OrderRequest } from "@/contexts/OrderRequestContext";
 import { useToast } from "@/hooks/use-toast";
+import { AdminNav } from "@/components/admin/AdminNav";
 
 const AdminOrders = () => {
-  const { isAdmin, logout } = useAuth();
+  const { isAdmin } = useAuth();
   const { requests, updateStatus, deleteRequest } = useOrderRequests();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -19,15 +20,6 @@ const AdminOrders = () => {
       navigate("/admin/login");
     }
   }, [isAdmin, navigate]);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-    toast({
-      title: "Выход выполнен",
-      description: "До скорой встречи!"
-    });
-  };
 
   const handleStatusChange = (id: string, status: OrderRequest['status']) => {
     updateStatus(id, status);
@@ -114,26 +106,13 @@ const AdminOrders = () => {
 
   return (
     <div className="min-h-screen bg-secondary/20">
-      <section className="py-12 bg-gradient-to-br from-background via-secondary to-accent">
+      <AdminNav />
+      
+      <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">Заявки</h1>
-              <p className="text-muted-foreground">Управление заявками клиентов</p>
-            </div>
-            <Button onClick={handleLogout} variant="outline" size="lg">
-              <Icon name="LogOut" className="mr-2" size={18} />
-              Выйти
-            </Button>
-          </div>
-          
-          <div className="flex gap-4">
-            <Link to="/admin">
-              <Button variant="outline">
-                <Icon name="ArrowLeft" className="mr-2" size={18} />
-                К портфолио
-              </Button>
-            </Link>
+          <div className="mb-6">
+            <h1 className="text-4xl font-bold mb-2">Заявки</h1>
+            <p className="text-muted-foreground">Управление заявками клиентов</p>
           </div>
         </div>
       </section>
