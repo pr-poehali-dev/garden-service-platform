@@ -1,9 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOrder } from "@/contexts/OrderContext";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { useAdminContent } from "@/contexts/AdminContentContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -11,6 +12,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { items } = useOrder();
   const { contacts } = useSiteSettings();
+  const { homepage, fetchHomepage } = useAdminContent();
+
+  useEffect(() => {
+    fetchHomepage();
+  }, []);
 
   const navigation = [
     { name: "Главная", path: "/" },
@@ -28,10 +34,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Icon name="TreeDeciduous" className="text-primary-foreground" size={24} />
-              </div>
-              <span className="text-2xl font-bold">Тимирязевец</span>
+              {homepage?.logo ? (
+                <img 
+                  src={homepage.logo} 
+                  alt={homepage.site_name || "Логотип"} 
+                  className="h-10 object-contain group-hover:scale-110 transition-transform"
+                />
+              ) : (
+                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Icon name="TreeDeciduous" className="text-primary-foreground" size={24} />
+                </div>
+              )}
+              <span className="text-2xl font-bold">{homepage?.site_name || "Тимирязевец"}</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-1">
@@ -105,12 +119,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   className="w-10 h-10 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Админ-панель"
                 >
-                  <Icon name="TreeDeciduous" className="text-background" size={24} />
+                  {homepage?.logo ? (
+                    <img 
+                      src={homepage.logo} 
+                      alt="Логотип" 
+                      className="h-8 object-contain"
+                    />
+                  ) : (
+                    <Icon name="TreeDeciduous" className="text-background" size={24} />
+                  )}
                 </button>
-                <span className="text-2xl font-bold">Тимирязевец</span>
+                <span className="text-2xl font-bold">{homepage?.site_name || "Тимирязевец"}</span>
               </div>
               <p className="text-background/70">
-                Профессиональный уход за садом и участком
+                {homepage?.hero_subtitle || "Профессиональный уход за садом и участком"}
               </p>
             </div>
 
