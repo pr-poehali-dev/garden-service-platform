@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Test image upload with base64 data",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "file": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+        "filename": "test.png"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "url": "string",
+        "filename": "string",
+        "size": "number",
+        "uploadedAt": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Test upload without file data",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "filename": "test.png"
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "No file data provided"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

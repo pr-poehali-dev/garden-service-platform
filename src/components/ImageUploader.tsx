@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import { imageStorage } from "@/utils/imageStorage";
 import { useToast } from "@/hooks/use-toast";
+import func2url from "../../backend/func2url.json";
 
 interface ImageUploaderProps {
   value: string;
@@ -42,12 +42,37 @@ export const ImageUploader = ({ value, onChange, onClear }: ImageUploaderProps) 
     setIsUploading(true);
     
     try {
-      const storedImage = await imageStorage.save(file);
-      onChange(storedImage.dataUrl);
+      const reader = new FileReader();
+      
+      const readFilePromise = new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('Ошибка чтения файла'));
+        reader.readAsDataURL(file);
+      });
+      
+      const dataUrl = await readFilePromise;
+      
+      const response = await fetch(func2url['upload-image'], {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          file: dataUrl,
+          filename: file.name
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Ошибка загрузки на сервер');
+      }
+      
+      const result = await response.json();
+      onChange(result.url);
       
       toast({
         title: "Изображение загружено",
-        description: `Файл ${file.name} успешно сохранён`
+        description: `Файл ${file.name} успешно сохранён на сервере`
       });
     } catch (error) {
       toast({
