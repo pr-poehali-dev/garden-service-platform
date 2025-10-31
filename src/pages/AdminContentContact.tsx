@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAdminContent } from '@/contexts/AdminContentContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import Icon from '@/components/ui/icon';
 import { AdminNav } from '@/components/admin/AdminNav';
 
 export default function AdminContentContact() {
+  const navigate = useNavigate();
   const { contactPage, fetchContactPage, updateContactPage, loading } = useAdminContent();
   
   const [phones, setPhones] = useState<string[]>([]);
@@ -69,17 +71,27 @@ export default function AdminContentContact() {
       <AdminNav />
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Страница контактов</h1>
-              <p className="text-muted-foreground mt-2">
-                Управление контактной информацией
-              </p>
-            </div>
-            <Button onClick={handleSave}>
-              <Icon name="Save" size={18} className="mr-2" />
-              Сохранить изменения
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/admin')}
+              title="Назад в админ-панель"
+            >
+              <Icon name="ArrowLeft" size={20} />
             </Button>
+            <div className="flex-1 flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold">Страница контактов</h1>
+                <p className="text-muted-foreground mt-2">
+                  Управление контактной информацией
+                </p>
+              </div>
+              <Button onClick={handleSave}>
+                <Icon name="Save" size={18} className="mr-2" />
+                Сохранить изменения
+              </Button>
+            </div>
           </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

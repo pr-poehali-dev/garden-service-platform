@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ interface IntegrationSettings {
 }
 
 export default function AdminIntegrations() {
+  const navigate = useNavigate();
   const [settings, setSettings] = useState<IntegrationSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -106,26 +108,36 @@ export default function AdminIntegrations() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Интеграции</h1>
-          <p className="text-muted-foreground mt-2">
-            Настройки уведомлений для Telegram и WhatsApp
-          </p>
-        </div>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <>
-              <Icon name="Loader2" size={18} className="mr-2 animate-spin" />
-              Сохранение...
-            </>
-          ) : (
-            <>
-              <Icon name="Save" size={18} className="mr-2" />
-              Сохранить
-            </>
-          )}
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/admin')}
+          title="Назад в админ-панель"
+        >
+          <Icon name="ArrowLeft" size={20} />
         </Button>
+        <div className="flex-1 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Интеграции</h1>
+            <p className="text-muted-foreground mt-2">
+              Настройки уведомлений для Telegram и WhatsApp
+            </p>
+          </div>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? (
+              <>
+                <Icon name="Loader2" size={18} className="mr-2 animate-spin" />
+                Сохранение...
+              </>
+            ) : (
+              <>
+                <Icon name="Save" size={18} className="mr-2" />
+                Сохранить
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       <Card>

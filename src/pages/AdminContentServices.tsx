@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAdminContent, ContentService } from '@/contexts/AdminContentContext';
 import { ContentList } from '@/components/admin/ContentList';
 import { ContentForm } from '@/components/admin/ContentForm';
 import { AdminNav } from '@/components/admin/AdminNav';
+import { Button } from '@/components/ui/button';
+import Icon from '@/components/ui/icon';
 
 export default function AdminContentServices() {
+  const navigate = useNavigate();
   const {
     services,
     loading,
@@ -147,10 +151,22 @@ export default function AdminContentServices() {
       <AdminNav />
       <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Управление услугами</h1>
-        <p className="text-muted-foreground mt-2">
-          Создавайте, редактируйте и управляйте услугами сайта
-        </p>
+        <div className="flex items-center gap-4 mb-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/admin')}
+            title="Назад в админ-панель"
+          >
+            <Icon name="ArrowLeft" size={20} />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">Управление услугами</h1>
+            <p className="text-muted-foreground mt-2">
+              Создавайте, редактируйте и управляйте услугами сайта
+            </p>
+          </div>
+        </div>
       </div>
 
       <ContentList

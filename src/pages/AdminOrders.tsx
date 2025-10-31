@@ -111,8 +111,20 @@ const AdminOrders = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="mb-6">
-            <h1 className="text-4xl font-bold mb-2">Заявки</h1>
-            <p className="text-muted-foreground">Управление заявками клиентов</p>
+            <div className="flex items-center gap-4 mb-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/admin')}
+                title="Назад в админ-панель"
+              >
+                <Icon name="ArrowLeft" size={20} />
+              </Button>
+              <div>
+                <h1 className="text-4xl font-bold">Заявки</h1>
+                <p className="text-muted-foreground">Управление заявками клиентов</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

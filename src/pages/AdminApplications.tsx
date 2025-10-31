@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +40,7 @@ const statusLabels: Record<string, { label: string; variant: 'default' | 'second
 };
 
 export default function AdminApplications() {
+  const navigate = useNavigate();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,8 +97,16 @@ export default function AdminApplications() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/admin')}
+          title="Назад в админ-панель"
+        >
+          <Icon name="ArrowLeft" size={20} />
+        </Button>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold">Заявки</h1>
           <p className="text-muted-foreground mt-2">
             Управление заявками с сайта
