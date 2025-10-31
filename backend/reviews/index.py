@@ -45,9 +45,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             status = params.get('status')
             
             if status and status in ['pending', 'approved', 'rejected']:
-                query = f"SELECT id, name, email, rating, text, photos, status, created_at FROM reviews WHERE status = '{status}' ORDER BY created_at DESC"
+                query = f"SELECT id, name, email, phone, rating, text, photos, status, created_at FROM reviews WHERE status = '{status}' ORDER BY created_at DESC"
             else:
-                query = "SELECT id, name, email, rating, text, photos, status, created_at FROM reviews ORDER BY created_at DESC"
+                query = "SELECT id, name, email, phone, rating, text, photos, status, created_at FROM reviews ORDER BY created_at DESC"
             
             cur.execute(query)
             rows = cur.fetchall()
@@ -57,11 +57,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'id': row[0],
                     'name': row[1],
                     'email': row[2],
-                    'rating': row[3],
-                    'text': row[4],
-                    'photos': row[5] or [],
-                    'status': row[6],
-                    'created_at': row[7].isoformat() if row[7] else None
+                    'phone': row[3],
+                    'rating': row[4],
+                    'text': row[5],
+                    'photos': row[6] or [],
+                    'status': row[7],
+                    'created_at': row[8].isoformat() if row[8] else None
                 })
             
             cur.close()
@@ -75,21 +76,34 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         elif method == 'POST':
             body_data = json.loads(event.get('body', '{}'))
             name = body_data.get('name', '').replace("'", "''")
-            email = body_data.get('email', '').replace("'", "''")
+            email = body_data.get('email', '').replace("'", "''") if body_data.get('email') else None
+            phone = body_data.get('phone', '').replace("'", "''") if body_data.get('phone') else None
             rating = int(body_data.get('rating', 5))
             text = body_data.get('text', '').replace("'", "''")
             photos = body_data.get('photos', [])
             
-            if not name or not email or not text:
+            if not name or not text:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'name, email and text are required'}),
+                    'body': json.dumps({'error': 'name and text are required'}),
+                    'isBase64Encoded': False
+                }
+            
+            if not email and not phone:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'either email or phone is required'}),
                     'isBase64Encoded': False
                 }
             
             photos_array = 'ARRAY[' + ','.join([f"'{p.replace(chr(39), chr(39)*2)}'" for p in photos]) + ']' if photos else 'ARRAY[]::text[]'
-            query = f"INSERT INTO reviews (name, email, rating, text, photos, status) VALUES ('{name}', '{email}', {rating}, '{text}', {photos_array}, 'pending') RETURNING id"
+            
+            email_val = f"'{email}'" if email else 'NULL'
+            phone_val = f"'{phone}'" if phone else 'NULL'
+            
+            query = f"INSERT INTO reviews (name, email, phone, rating, text, photos, status) VALUES ('{name}', {email_val}, {phone_val}, {rating}, '{text}', {photos_array}, 'pending') RETURNING id"
             
             cur.execute(query)
             review_id = cur.fetchone()[0]

@@ -12,6 +12,7 @@ interface Review {
   id: number;
   name: string;
   email: string;
+  phone?: string;
   rating: number;
   text: string;
   photos: string[];
@@ -24,6 +25,7 @@ const Reviews = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     rating: 5,
     text: "",
     photos: [] as string[]
@@ -67,7 +69,7 @@ const Reviews = () => {
           title: "Спасибо за отзыв!",
           description: "Ваш отзыв будет опубликован после модерации.",
         });
-        setFormData({ name: "", email: "", rating: 5, text: "", photos: [] });
+        setFormData({ name: "", email: "", phone: "", rating: 5, text: "", photos: [] });
       } else {
         toast({
           title: "Ошибка",
@@ -244,8 +246,24 @@ const Reviews = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="ivan@example.com"
-                      required
+                      required={!formData.phone}
                     />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone">Телефон</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="+7 (999) 123-45-67"
+                      required={!formData.email}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Укажите email или телефон (или оба)
+                    </p>
                   </div>
 
                   <div>

@@ -12,6 +12,7 @@ interface Review {
   id: number;
   name: string;
   email: string;
+  phone?: string;
   rating: number;
   text: string;
   photos: string[];
@@ -208,7 +209,20 @@ const AdminContentReviews = () => {
                         {review.status === "rejected" && "Отклонен"}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-2">{review.email}</p>
+                    <div className="text-sm text-muted-foreground mb-2 space-y-1">
+                      {review.email && (
+                        <p className="flex items-center gap-2">
+                          <Icon name="Mail" size={14} />
+                          {review.email}
+                        </p>
+                      )}
+                      {review.phone && (
+                        <p className="flex items-center gap-2">
+                          <Icon name="Phone" size={14} />
+                          {review.phone}
+                        </p>
+                      )}
+                    </div>
                     <div className="flex gap-1 mb-2">
                       {[...Array(5)].map((_, i) => (
                         <Icon
