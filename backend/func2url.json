@@ -1,3 +1,8 @@
 {
+  "notifications": "https://functions.poehali.dev/1615fb67-bcc4-457c-8042-ea86dc601655",
+  "integration-settings": "https://functions.poehali.dev/bc7652a8-de62-4d98-92a3-bd77328cc08c",
+  "orders": "https://functions.poehali.dev/867beb5a-feac-4824-89d3-833dad3ae275",
+  "applications": "https://functions.poehali.dev/de9da4fe-5fbe-4e4b-a161-3951cdae2ccf",
+  "cms": "https://functions.poehali.dev/16d61ece-5454-43f6-9b25-62a57705a8bb",
   "team": "https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034"
 }

@@ -10,6 +10,10 @@ import { useOrder } from "@/contexts/OrderContext";
 import { useOrderRequests } from "@/contexts/OrderRequestContext";
 import { useToast } from "@/hooks/use-toast";
 
+const APPLICATIONS_API = 'https://functions.poehali.dev/de9da4fe-5fbe-4e4b-a161-3951cdae2ccf';
+const NOTIFICATIONS_API = 'https://functions.poehali.dev/1615fb67-bcc4-457c-8042-ea86dc601655';
+const INTEGRATION_SETTINGS_API = 'https://functions.poehali.dev/bc7652a8-de62-4d98-92a3-bd77328cc08c';
+
 const Order = () => {
   const { items, removeItem, clearOrder, getTotalPrice } = useOrder();
   const { addRequest } = useOrderRequests();
@@ -22,6 +26,7 @@ const Order = () => {
     messenger: "",
     comment: ""
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,32 +40,86 @@ const Order = () => {
       return;
     }
 
-    const orderData = {
-      name: formData.name,
-      address: formData.address,
-      phone: formData.phone,
-      messenger: formData.messenger || undefined,
-      comment: formData.comment || undefined,
-      services: items.map(item => ({
-        name: item.name,
-        category: item.category,
+    setSubmitting(true);
+
+    try {
+      const applicationItems = items.map(item => ({
+        service_id: 0,
+        title: `${item.name} (${item.category})`,
+        qty: item.quantity,
         price: item.price,
-        unit: item.unit || '',
-        quantity: item.quantity,
-        totalPrice: item.totalPrice
-      })),
-      totalPrice: getTotalPrice()
-    };
+        total: item.totalPrice
+      }));
 
-    addRequest(orderData);
+      const response = await fetch(APPLICATIONS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: formData.name,
+          customer_phone: formData.phone,
+          customer_address: formData.address,
+          customer_comment: formData.comment,
+          items: applicationItems,
+          total_amount: getTotalPrice(),
+          source: 'website'
+        })
+      });
 
-    toast({
-      title: "Заявка отправлена!",
-      description: "Мы свяжемся с вами в ближайшее время"
-    });
+      if (!response.ok) {
+        throw new Error('Failed to create application');
+      }
 
-    clearOrder();
-    navigate("/");
+      const newApplication = await response.json();
+
+      const settingsResponse = await fetch(INTEGRATION_SETTINGS_API);
+      const settings = await settingsResponse.json();
+
+      await fetch(NOTIFICATIONS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'application',
+          data: newApplication,
+          settings
+        })
+      });
+
+      const orderData = {
+        name: formData.name,
+        address: formData.address,
+        phone: formData.phone,
+        messenger: formData.messenger || undefined,
+        comment: formData.comment || undefined,
+        services: items.map(item => ({
+          name: item.name,
+          category: item.category,
+          price: item.price,
+          unit: item.unit || '',
+          quantity: item.quantity,
+          totalPrice: item.totalPrice
+        })),
+        totalPrice: getTotalPrice()
+      };
+
+      addRequest(orderData);
+
+      toast({
+        title: "Заявка отправлена!",
+        description: "Мы свяжемся с вами в ближайшее время"
+      });
+
+      clearOrder();
+      navigate("/");
+    } catch (error) {
+      console.error('Failed to submit application:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось отправить заявку. Попробуйте снова.",
+        variant: "destructive"
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (items.length === 0) {
@@ -165,12 +224,21 @@ const Order = () => {
                     </div>
 
                     <div className="flex gap-4">
-                      <Button type="submit" size="lg" className="flex-1">
-                        Отправить заявку
-                        <Icon name="Send" className="ml-2" size={18} />
+                      <Button type="submit" size="lg" className="flex-1" disabled={submitting}>
+                        {submitting ? (
+                          <>
+                            <Icon name="Loader2" className="mr-2 animate-spin" size={18} />
+                            Отправка...
+                          </>
+                        ) : (
+                          <>
+                            Отправить заявку
+                            <Icon name="Send" className="ml-2" size={18} />
+                          </>
+                        )}
                       </Button>
                       <Link to="/services">
-                        <Button type="button" variant="outline" size="lg">
+                        <Button type="button" variant="outline" size="lg" disabled={submitting}>
                           Назад к услугам
                         </Button>
                       </Link>

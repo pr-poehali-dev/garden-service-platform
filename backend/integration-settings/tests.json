@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "name": "Get integration settings",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": 1,
+        "telegram_bot_token": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

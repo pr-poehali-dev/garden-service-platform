@@ -39,11 +39,27 @@ const AdminDashboard = () => {
   const menuItems = [
     {
       title: "Заявки",
-      description: `Управление заявками клиентов (${requests.length})`,
-      icon: "ShoppingCart",
-      path: "/admin/orders",
+      description: "Новые заявки с сайта",
+      icon: "Inbox",
+      path: "/admin/applications",
       badge: newOrdersCount > 0 ? newOrdersCount : null,
       color: "bg-blue-500"
+    },
+    {
+      title: "Заказы",
+      description: "Согласованные заказы",
+      icon: "ShoppingCart",
+      path: "/admin/orders-new",
+      badge: null,
+      color: "bg-green-500"
+    },
+    {
+      title: "Интеграции",
+      description: "Telegram и WhatsApp уведомления",
+      icon: "Bell",
+      path: "/admin/integrations",
+      badge: null,
+      color: "bg-purple-500"
     },
     {
       title: "Контент",

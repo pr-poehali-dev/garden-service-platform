@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "name": "Send notification without settings",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "type": "application",
+        "data": {
+          "number": "APP-20250131-120000",
+          "customer_name": "Test User",
+          "customer_phone": "+7 999 999-99-99",
+          "items": [],
+          "total_amount": 0
+        },
+        "settings": {}
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
