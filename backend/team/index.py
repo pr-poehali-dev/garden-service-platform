@@ -32,7 +32,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         cur = conn.cursor()
         
         if method == 'GET':
-            cur.execute('SELECT id, name, COALESCE(role, position) as position, photo, order_index FROM team_members WHERE removed_at IS NULL AND (visible IS NULL OR visible = TRUE) ORDER BY order_index ASC')
+            cur.execute('SELECT id, name, COALESCE(role, position) as position, photo, order_index FROM team_members WHERE removed_at IS NULL ORDER BY order_index ASC')
             rows = cur.fetchall()
             team = [
                 {
@@ -128,7 +128,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             params = event.get('queryStringParameters', {})
             member_id = params.get('id')
             
-            cur.execute("DELETE FROM team_members WHERE id = %s", (member_id,))
+            cur.execute("UPDATE team_members SET removed_at = CURRENT_TIMESTAMP WHERE id = %s", (member_id,))
             conn.commit()
             
             cur.close()
