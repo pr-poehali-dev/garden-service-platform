@@ -22,8 +22,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { name: "Главная", path: "/" },
     { name: "Услуги и цены", path: "/services" },
     { name: "Портфолио", path: "/portfolio" },
-    { name: "Наша команда", path: "/team" },
     { name: "Отзывы", path: "/reviews" },
+    { name: "Наша команда", path: "/team" },
     { name: "Контакты", path: "/contact" }
   ];
 
