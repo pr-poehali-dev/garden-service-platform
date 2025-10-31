@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,15 +6,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Icon from "@/components/ui/icon";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminContent } from "@/contexts/AdminContentContext";
 
 const Contact = () => {
   const { toast } = useToast();
+  const { contactPage, fetchContactPage } = useAdminContent();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     message: ""
   });
+
+  useEffect(() => {
+    fetchContactPage();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,33 +42,33 @@ const Contact = () => {
 
   const contacts = [
     {
-      icon: "MapPin",
-      title: "Адрес",
-      info: "г. Москва, ул. Тверская, д. 12, офис 45"
-    },
-    {
-      icon: "Phone",
+      icon: "Phone" as const,
       title: "Телефон",
-      info: "+7 (495) 123-45-67"
+      info: contactPage?.phones?.[0] || "+7 (495) 123-45-67"
     },
     {
-      icon: "Mail",
-      title: "Email",
-      info: "hello@agency.ru"
+      icon: "MessageCircle" as const,
+      title: "Telegram",
+      info: contactPage?.messengers?.telegram || "@garden_service"
     },
     {
-      icon: "Clock",
-      title: "Режим работы",
-      info: "Пн-Пт: 10:00 - 19:00"
+      icon: "Phone" as const,
+      title: "WhatsApp",
+      info: contactPage?.messengers?.whatsapp || "+7 (999) 123-45-67"
+    },
+    {
+      icon: "MapPin" as const,
+      title: "Адрес",
+      info: contactPage?.address || "г. Москва"
     }
-  ];
+  ].filter(c => c.info);
 
   const socials = [
-    { icon: "Instagram", link: "#", label: "Instagram" },
-    { icon: "Facebook", link: "#", label: "Facebook" },
-    { icon: "Linkedin", link: "#", label: "LinkedIn" },
-    { icon: "MessageCircle", link: "#", label: "Telegram" }
-  ];
+    contactPage?.socials?.instagram && { icon: "Instagram" as const, link: contactPage.socials.instagram, label: "Instagram" },
+    contactPage?.socials?.facebook && { icon: "Facebook" as const, link: contactPage.socials.facebook, label: "Facebook" },
+    contactPage?.socials?.vk && { icon: "Share2" as const, link: contactPage.socials.vk, label: "ВКонтакте" },
+    contactPage?.messengers?.telegram && { icon: "MessageCircle" as const, link: `https://t.me/${contactPage.messengers.telegram.replace('@', '')}`, label: "Telegram" }
+  ].filter(Boolean) as Array<{ icon: string; link: string; label: string }>;
 
   return (
     <div className="min-h-screen">

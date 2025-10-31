@@ -1,0 +1,31 @@
+{
+  "tests": [
+    {
+      "name": "Get contact page",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Update contact page",
+      "method": "PUT",
+      "path": "/",
+      "body": {
+        "phones": ["+7 (999) 123-45-67"],
+        "messengers": {
+          "telegram": "@test"
+        },
+        "address": "Test address"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

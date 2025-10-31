@@ -388,19 +388,10 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const savedContact = localStorage.getItem('admin_contact_page');
-      const mockContact: ContactPage = savedContact ? JSON.parse(savedContact) : {
-        id: 1,
-        phones: ['+7 (999) 123-45-67'],
-        messengers: {
-          whatsapp: '+79991234567',
-          telegram: '@garden_service'
-        },
-        address: 'Москва, ул. Примерная, д. 1',
-        socials: {},
-        requisites: {}
-      };
-      setContactPage(mockContact);
+      const response = await fetch('https://functions.poehali.dev/56fd2c98-568e-4c25-8d6f-30612b4d311d');
+      if (!response.ok) throw new Error('Ошибка загрузки контактов');
+      const data = await response.json();
+      setContactPage(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка загрузки контактов');
     } finally {
@@ -409,10 +400,20 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateContactPage = async (updates: Partial<ContactPage>) => {
-    const updated = contactPage ? { ...contactPage, ...updates, updated_at: new Date().toISOString() } : null;
-    setContactPage(updated);
-    if (updated) {
-      localStorage.setItem('admin_contact_page', JSON.stringify(updated));
+    try {
+      const updated = contactPage ? { ...contactPage, ...updates } : null;
+      if (!updated) return;
+      
+      const response = await fetch('https://functions.poehali.dev/56fd2c98-568e-4c25-8d6f-30612b4d311d', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated)
+      });
+      if (!response.ok) throw new Error('Ошибка обновления контактов');
+      const data = await response.json();
+      setContactPage(data);
+    } catch (err) {
+      console.error('Failed to update contact page:', err);
     }
   };
 
