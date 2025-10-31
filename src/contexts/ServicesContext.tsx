@@ -26,6 +26,8 @@ interface ServicesContextType {
   addCategory: (categorySlug: string, category: CategoryData) => void;
   deleteCategory: (categorySlug: string) => void;
   toggleCategoryVisibility: (categorySlug: string) => void;
+  reorderCategories: (slugs: string[], isVisible: boolean) => void;
+  reorderServices: (categorySlug: string, serviceIds: string[]) => void;
 }
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -257,6 +259,43 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const reorderCategories = (slugs: string[], isVisible: boolean) => {
+    setCategories(prev => {
+      const entries = Object.entries(prev);
+      const visible = entries.filter(([, cat]) => cat.visible !== false);
+      const hidden = entries.filter(([, cat]) => cat.visible === false);
+      
+      let reordered: [string, CategoryData][];
+      
+      if (isVisible) {
+        reordered = [...slugs.map(slug => [slug, prev[slug]] as [string, CategoryData]), ...hidden];
+      } else {
+        reordered = [...visible, ...slugs.map(slug => [slug, prev[slug]] as [string, CategoryData])];
+      }
+      
+      return Object.fromEntries(reordered);
+    });
+  };
+
+  const reorderServices = (categorySlug: string, serviceIds: string[]) => {
+    setCategories(prev => {
+      const category = prev[categorySlug];
+      if (!category) return prev;
+
+      const reordered = serviceIds
+        .map(id => category.services.find(s => s.id === id))
+        .filter((s): s is Service => s !== undefined);
+
+      return {
+        ...prev,
+        [categorySlug]: {
+          ...category,
+          services: reordered
+        }
+      };
+    });
+  };
+
   return (
     <ServicesContext.Provider value={{ 
       categories, 
@@ -266,7 +305,9 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
       updateCategory,
       addCategory,
       deleteCategory,
-      toggleCategoryVisibility
+      toggleCategoryVisibility,
+      reorderCategories,
+      reorderServices
     }}>
       {children}
     </ServicesContext.Provider>

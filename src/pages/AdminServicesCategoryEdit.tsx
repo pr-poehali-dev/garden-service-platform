@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,11 +22,148 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+interface Service {
+  id: string;
+  name: string;
+  price: number;
+  unit: string;
+}
+
+interface SortableRowProps {
+  service: Service;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  editingId: string | null;
+  setEditingId: (id: string | null) => void;
+  editService: { name: string; price: number; unit: string };
+  setEditService: (data: { name: string; price: number; unit: string }) => void;
+  onSaveEdit: () => void;
+}
+
+const SortableRow = ({
+  service,
+  onEdit,
+  onDelete,
+  editingId,
+  setEditingId,
+  editService,
+  setEditService,
+  onSaveEdit
+}: SortableRowProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: service.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <TableRow ref={setNodeRef} style={style}>
+      <TableCell>
+        <Button
+          size="sm"
+          variant="ghost"
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing p-1"
+        >
+          <Icon name="GripVertical" size={16} />
+        </Button>
+      </TableCell>
+      <TableCell className="font-medium">{service.name}</TableCell>
+      <TableCell>{service.price.toLocaleString('ru-RU')} ₽</TableCell>
+      <TableCell>{service.unit}</TableCell>
+      <TableCell className="text-right">
+        <div className="flex gap-2 justify-end">
+          <Dialog open={editingId === service.id} onOpenChange={(open) => !open && setEditingId(null)}>
+            <DialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onEdit(service.id)}
+              >
+                <Icon name="Edit" size={16} />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Редактировать услугу</DialogTitle>
+                <DialogDescription>
+                  Изменение "{service.name}"
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <div>
+                  <Label>Название услуги</Label>
+                  <Input
+                    value={editService.name}
+                    onChange={(e) => setEditService({ ...editService, name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Цена</Label>
+                  <Input
+                    type="number"
+                    value={editService.price}
+                    onChange={(e) => setEditService({ ...editService, price: Number(e.target.value) })}
+                  />
+                </div>
+                <div>
+                  <Label>Единица измерения</Label>
+                  <Input
+                    value={editService.unit}
+                    onChange={(e) => setEditService({ ...editService, unit: e.target.value })}
+                  />
+                </div>
+                <Button onClick={onSaveEdit} className="w-full">
+                  Сохранить изменения
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+          
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => onDelete(service.id)}
+          >
+            <Icon name="Trash2" size={16} />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 const AdminServicesCategoryEdit = () => {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
-  const { categories, updateService, addService, deleteService } = useServices();
+  const { categories, updateService, addService, deleteService, reorderServices } = useServices();
   
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -42,6 +179,13 @@ const AdminServicesCategoryEdit = () => {
     price: 0,
     unit: ""
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   if (!slug || !categories[slug]) {
     return (
@@ -101,6 +245,20 @@ const AdminServicesCategoryEdit = () => {
     const service = category.services.find(s => s.id === serviceId);
     if (confirm(`Удалить услугу "${service?.name}"?`)) {
       deleteService(slug, serviceId);
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = category.services.findIndex(s => s.id === active.id);
+    const newIndex = category.services.findIndex(s => s.id === over.id);
+
+    if (oldIndex !== -1 && newIndex !== -1) {
+      const reordered = arrayMove(category.services, oldIndex, newIndex);
+      reorderServices(slug, reordered.map(s => s.id));
     }
   };
 
@@ -191,83 +349,43 @@ const AdminServicesCategoryEdit = () => {
                   <p className="text-sm mt-2">Нажмите "Добавить услугу" чтобы начать</p>
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Название</TableHead>
-                      <TableHead>Цена</TableHead>
-                      <TableHead>Единица</TableHead>
-                      <TableHead className="text-right">Действия</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {category.services.map((service) => (
-                      <TableRow key={service.id}>
-                        <TableCell className="font-medium">{service.name}</TableCell>
-                        <TableCell>{service.price.toLocaleString('ru-RU')} ₽</TableCell>
-                        <TableCell>{service.unit}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex gap-2 justify-end">
-                            <Dialog open={editingId === service.id} onOpenChange={(open) => !open && setEditingId(null)}>
-                              <DialogTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => handleEditService(service.id)}
-                                >
-                                  <Icon name="Edit" size={16} />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Редактировать услугу</DialogTitle>
-                                  <DialogDescription>
-                                    Изменение "{service.name}"
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="space-y-4 mt-4">
-                                  <div>
-                                    <Label>Название услуги</Label>
-                                    <Input
-                                      value={editService.name}
-                                      onChange={(e) => setEditService({ ...editService, name: e.target.value })}
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label>Цена</Label>
-                                    <Input
-                                      type="number"
-                                      value={editService.price}
-                                      onChange={(e) => setEditService({ ...editService, price: Number(e.target.value) })}
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label>Единица измерения</Label>
-                                    <Input
-                                      value={editService.unit}
-                                      onChange={(e) => setEditService({ ...editService, unit: e.target.value })}
-                                    />
-                                  </div>
-                                  <Button onClick={handleSaveEdit} className="w-full">
-                                    Сохранить изменения
-                                  </Button>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                            
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleDeleteService(service.id)}
-                            >
-                              <Icon name="Trash2" size={16} />
-                            </Button>
-                          </div>
-                        </TableCell>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-12"></TableHead>
+                        <TableHead>Название</TableHead>
+                        <TableHead>Цена</TableHead>
+                        <TableHead>Единица</TableHead>
+                        <TableHead className="text-right">Действия</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      <SortableContext
+                        items={category.services.map(s => s.id)}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {category.services.map((service) => (
+                          <SortableRow
+                            key={service.id}
+                            service={service}
+                            onEdit={handleEditService}
+                            onDelete={handleDeleteService}
+                            editingId={editingId}
+                            setEditingId={setEditingId}
+                            editService={editService}
+                            setEditService={setEditService}
+                            onSaveEdit={handleSaveEdit}
+                          />
+                        ))}
+                      </SortableContext>
+                    </TableBody>
+                  </Table>
+                </DndContext>
               )}
             </CardContent>
           </Card>
