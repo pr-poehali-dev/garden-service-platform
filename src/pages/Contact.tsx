@@ -78,9 +78,6 @@ const Contact = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Свяжитесь с нами
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Готовы обсудить ваш проект? Напишите нам или приезжайте в офис на чашку кофе
-            </p>
           </div>
         </div>
       </section>
@@ -90,9 +87,6 @@ const Contact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             <div className="animate-fade-in">
               <h2 className="text-3xl font-bold mb-6">Оставьте заявку</h2>
-              <p className="text-muted-foreground mb-8">
-                Заполните форму, и наш менеджер свяжется с вами в течение часа
-              </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -224,17 +218,8 @@ const Contact = () => {
       <section className="py-16 bg-secondary/30">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Есть вопросы?
+            Мы ценим мнение каждого клиента
           </h2>
-          <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Позвоните нам прямо сейчас, и мы ответим на все ваши вопросы
-          </p>
-          <a href="tel:+74951234567">
-            <Button size="lg" variant="outline" className="text-lg px-8">
-              <Icon name="Phone" className="mr-2" size={20} />
-              +7 (495) 123-45-67
-            </Button>
-          </a>
         </div>
       </section>
     </div>
