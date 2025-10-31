@@ -244,6 +244,8 @@ export default function AdminContentContact() {
           </CardContent>
         </Card>
       </div>
+        </div>
+      </div>
     </div>
   );
 }
