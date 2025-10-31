@@ -1,58 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { Link } from "react-router-dom";
+import { useServices } from "@/contexts/ServicesContext";
 
 const Services = () => {
-  const services = [
-    {
-      icon: "TreeDeciduous",
-      title: "Уход за зелёными насаждениями",
-      description: "Профессиональный уход за деревьями и кустарниками",
-      slug: "green-care"
-    },
-    {
-      icon: "Bug",
-      title: "Обработка растений и участка",
-      description: "Защита от вредителей и болезней",
-      slug: "treatment"
-    },
-    {
-      icon: "Sprout",
-      title: "Газоны и почва",
-      description: "Создание и уход за идеальным газоном",
-      slug: "lawn"
-    },
-    {
-      icon: "Flower2",
-      title: "Посадочные работы",
-      description: "Посадка деревьев, кустарников и цветов",
-      slug: "planting"
-    },
-    {
-      icon: "Home",
-      title: "Благоустройство и ландшафт",
-      description: "Создание уникального ландшафта",
-      slug: "landscape"
-    },
-    {
-      icon: "Trash2",
-      title: "Уборка участка",
-      description: "Поддержание чистоты и порядка",
-      slug: "cleaning"
-    },
-    {
-      icon: "Snowflake",
-      title: "Зимнее обслуживание",
-      description: "Уход за участком в холодное время года",
-      slug: "winter"
-    },
-    {
-      icon: "Calendar",
-      title: "Комплексное обслуживание",
-      description: "Годовое обслуживание участка",
-      slug: "complex"
-    }
-  ];
+  const { categories } = useServices();
+
+  const services = Object.keys(categories).map(slug => ({
+    slug,
+    title: categories[slug].title,
+    description: categories[slug].description,
+    icon: categories[slug].icon
+  }));
 
   return (
     <div className="min-h-screen">
@@ -72,11 +31,10 @@ const Services = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => (
-              <Link key={index} to={`/services/${service.slug}`}>
+            {services.map((service) => (
+              <Link key={service.slug} to={`/services/${service.slug}`}>
                 <Card 
                   className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer animate-fade-in group"
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <CardHeader>
                     <div className="w-16 h-16 mb-4 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">

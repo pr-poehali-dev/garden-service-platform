@@ -9,6 +9,7 @@ export interface Service {
 
 export interface CategoryData {
   title: string;
+  description: string;
   icon: string;
   services: Service[];
 }
@@ -20,6 +21,7 @@ interface ServicesContextType {
   updateService: (categorySlug: string, serviceId: string, updates: Partial<Service>) => void;
   addService: (categorySlug: string, service: Service) => void;
   deleteService: (categorySlug: string, serviceId: string) => void;
+  updateCategory: (categorySlug: string, updates: Partial<Omit<CategoryData, 'services'>>) => void;
 }
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -29,6 +31,7 @@ const STORAGE_KEY = 'services_data';
 const defaultCategories: CategoriesData = {
   "green-care": {
     title: "Уход за зелёными насаждениями",
+    description: "Профессиональный уход за деревьями и кустарниками",
     icon: "TreeDeciduous",
     services: [
       { id: "gc1", name: "Санитарная обрезка дерева", price: 1500, unit: "дерево" },
@@ -43,6 +46,7 @@ const defaultCategories: CategoriesData = {
   },
   "treatment": {
     title: "Обработка растений и участка",
+    description: "Защита от вредителей и болезней",
     icon: "Bug",
     services: [
       { id: "tr1", name: "Обработка от вредителей", price: 2000, unit: "сотка" },
@@ -57,6 +61,7 @@ const defaultCategories: CategoriesData = {
   },
   "lawn": {
     title: "Газоны и почва",
+    description: "Создание и уход за идеальным газоном",
     icon: "Sprout",
     services: [
       { id: "lw1", name: "Стрижка газона", price: 800, unit: "сотка" },
@@ -71,6 +76,7 @@ const defaultCategories: CategoriesData = {
   },
   "planting": {
     title: "Посадочные работы",
+    description: "Посадка деревьев, кустарников и цветов",
     icon: "Flower2",
     services: [
       { id: "pl1", name: "Посадка дерева (до 2м)", price: 1000, unit: "дерево" },
@@ -85,6 +91,7 @@ const defaultCategories: CategoriesData = {
   },
   "landscape": {
     title: "Благоустройство и ландшафт",
+    description: "Создание уникального ландшафта",
     icon: "Home",
     services: [
       { id: "ls1", name: "Ландшафтный проект", price: 15000, unit: "проект" },
@@ -99,6 +106,7 @@ const defaultCategories: CategoriesData = {
   },
   "cleaning": {
     title: "Уборка участка",
+    description: "Поддержание чистоты и порядка",
     icon: "Trash2",
     services: [
       { id: "cl1", name: "Уборка листвы", price: 1000, unit: "сотка" },
@@ -113,6 +121,7 @@ const defaultCategories: CategoriesData = {
   },
   "winter": {
     title: "Зимнее обслуживание",
+    description: "Уход за участком в холодное время года",
     icon: "Snowflake",
     services: [
       { id: "wt1", name: "Снегоуборка дорожек", price: 1000, unit: "м²" },
@@ -127,6 +136,7 @@ const defaultCategories: CategoriesData = {
   },
   "complex": {
     title: "Комплексное обслуживание",
+    description: "Годовое обслуживание участка",
     icon: "Calendar",
     services: [
       { id: "cx1", name: "Весенний комплекс", price: 15000, unit: "сезон" },
@@ -198,8 +208,23 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const updateCategory = (categorySlug: string, updates: Partial<Omit<CategoryData, 'services'>>) => {
+    setCategories(prev => {
+      const category = prev[categorySlug];
+      if (!category) return prev;
+
+      return {
+        ...prev,
+        [categorySlug]: {
+          ...category,
+          ...updates
+        }
+      };
+    });
+  };
+
   return (
-    <ServicesContext.Provider value={{ categories, updateService, addService, deleteService }}>
+    <ServicesContext.Provider value={{ categories, updateService, addService, deleteService, updateCategory }}>
       {children}
     </ServicesContext.Provider>
   );

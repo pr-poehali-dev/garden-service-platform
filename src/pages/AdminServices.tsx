@@ -21,19 +21,27 @@ import {
 } from "@/components/ui/select";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
-import { useServices, Service } from "@/contexts/ServicesContext";
+import { useServices, Service, CategoryData } from "@/contexts/ServicesContext";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminServices = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  const { categories, updateService, deleteService, addService } = useServices();
+  const { categories, updateService, deleteService, addService, updateCategory } = useServices();
   const { toast } = useToast();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAddingNew, setIsAddingNew] = useState(false);
+  
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<{slug: string} & CategoryData | null>(null);
+  const [categoryFormData, setCategoryFormData] = useState({
+    title: "",
+    description: "",
+    icon: "Briefcase"
+  });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -114,6 +122,29 @@ const AdminServices = () => {
     }
   };
 
+  const handleEditCategory = (slug: string) => {
+    const category = categories[slug];
+    setEditingCategory({ slug, ...category });
+    setCategoryFormData({
+      title: category.title,
+      description: category.description,
+      icon: category.icon
+    });
+    setIsCategoryDialogOpen(true);
+  };
+
+  const handleSaveCategory = () => {
+    if (!editingCategory) return;
+
+    updateCategory(editingCategory.slug, categoryFormData);
+    toast({
+      title: "Блок обновлён",
+      description: `Блок "${categoryFormData.title}" успешно обновлён`
+    });
+
+    setIsCategoryDialogOpen(false);
+  };
+
   const commonUnits = [
     "шт",
     "сотка",
@@ -147,6 +178,13 @@ const AdminServices = () => {
     "включено"
   ];
 
+  const commonIcons = [
+    "TreeDeciduous", "Bug", "Sprout", "Flower2", "Home", 
+    "Trash2", "Snowflake", "Calendar", "Briefcase", "Leaf",
+    "Sun", "Cloud", "Droplet", "Wind", "Mountain",
+    "Trees", "ShoppingCart", "Wrench", "Settings", "Award"
+  ];
+
   return (
     <div className="min-h-screen bg-secondary/20">
       <section className="py-12 bg-gradient-to-br from-background via-secondary to-accent">
@@ -170,24 +208,31 @@ const AdminServices = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="space-y-6">
-            {categoryList.map(({ slug, title, icon, services }) => (
+            {categoryList.map(({ slug, title, description, icon, services }) => (
               <Card key={slug}>
                 <CardHeader>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                         <Icon name={icon} className="text-primary" size={24} />
                       </div>
                       <div>
                         <CardTitle>{title}</CardTitle>
-                        <CardDescription>{services.length} услуг</CardDescription>
+                        <CardDescription>{description}</CardDescription>
                       </div>
                     </div>
-                    <Button onClick={() => handleAddService(slug)} size="sm" className="gap-2">
-                      <Icon name="Plus" size={16} />
-                      Добавить услугу
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button onClick={() => handleEditCategory(slug)} variant="outline" size="sm" className="gap-2">
+                        <Icon name="Edit" size={16} />
+                        Редактировать блок
+                      </Button>
+                      <Button onClick={() => handleAddService(slug)} size="sm" className="gap-2">
+                        <Icon name="Plus" size={16} />
+                        Добавить услугу
+                      </Button>
+                    </div>
                   </div>
+                  <CardDescription className="text-xs">{services.length} услуг в категории</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -290,6 +335,74 @@ const AdminServices = () => {
             </Button>
             <Button onClick={handleSaveService}>
               {isAddingNew ? "Добавить" : "Сохранить"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Редактировать блок</DialogTitle>
+            <DialogDescription>
+              Измените название, описание и иконку блока услуг
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="category-title">Название блока</Label>
+              <Input
+                id="category-title"
+                value={categoryFormData.title}
+                onChange={e => setCategoryFormData({ ...categoryFormData, title: e.target.value })}
+                placeholder="Например: Уход за зелёными насаждениями"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="category-description">Описание блока</Label>
+              <Input
+                id="category-description"
+                value={categoryFormData.description}
+                onChange={e => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
+                placeholder="Краткое описание категории услуг"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="category-icon">Иконка</Label>
+              <Select
+                value={categoryFormData.icon}
+                onValueChange={value => setCategoryFormData({ ...categoryFormData, icon: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Выберите иконку" />
+                </SelectTrigger>
+                <SelectContent>
+                  {commonIcons.map(iconName => (
+                    <SelectItem key={iconName} value={iconName}>
+                      <div className="flex items-center gap-2">
+                        <Icon name={iconName} size={18} />
+                        {iconName}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="mt-2 p-3 bg-secondary/50 rounded-lg flex items-center gap-2">
+                <Icon name={categoryFormData.icon} size={24} />
+                <span className="text-sm">Предпросмотр иконки</span>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCategoryDialogOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={handleSaveCategory}>
+              Сохранить
             </Button>
           </DialogFooter>
         </DialogContent>
