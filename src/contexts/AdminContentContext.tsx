@@ -103,6 +103,7 @@ interface AdminContentContextType {
   toggleServiceVisibility: (id: number) => Promise<void>;
   softRemoveService: (id: number) => Promise<void>;
   restoreService: (id: number) => Promise<void>;
+  reorderServices: (services: ContentService[]) => Promise<void>;
   
   fetchPosts: (includeHidden?: boolean) => Promise<void>;
   getPost: (id: number) => ContentPost | undefined;
@@ -220,6 +221,14 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
 
   const restoreService = async (id: number) => {
     await updateService(id, { removed_at: undefined });
+  };
+
+  const reorderServices = async (reorderedServices: ContentService[]) => {
+    const servicesWithNewOrder = reorderedServices.map((service, index) => ({
+      ...service,
+      sort_order: index
+    }));
+    setServices(servicesWithNewOrder);
   };
 
   const fetchPosts = async (includeHidden = false) => {
@@ -407,6 +416,7 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
         toggleServiceVisibility,
         softRemoveService,
         restoreService,
+        reorderServices,
         fetchPosts,
         getPost,
         createPost,
