@@ -12,6 +12,7 @@ export interface CategoryData {
   description: string;
   icon: string;
   services: Service[];
+  visible?: boolean;
 }
 
 export type CategoriesData = Record<string, CategoryData>;
@@ -22,6 +23,9 @@ interface ServicesContextType {
   addService: (categorySlug: string, service: Service) => void;
   deleteService: (categorySlug: string, serviceId: string) => void;
   updateCategory: (categorySlug: string, updates: Partial<Omit<CategoryData, 'services'>>) => void;
+  addCategory: (categorySlug: string, category: CategoryData) => void;
+  deleteCategory: (categorySlug: string) => void;
+  toggleCategoryVisibility: (categorySlug: string) => void;
 }
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -223,8 +227,47 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const addCategory = (categorySlug: string, category: CategoryData) => {
+    setCategories(prev => ({
+      ...prev,
+      [categorySlug]: category
+    }));
+  };
+
+  const deleteCategory = (categorySlug: string) => {
+    setCategories(prev => {
+      const newCategories = { ...prev };
+      delete newCategories[categorySlug];
+      return newCategories;
+    });
+  };
+
+  const toggleCategoryVisibility = (categorySlug: string) => {
+    setCategories(prev => {
+      const category = prev[categorySlug];
+      if (!category) return prev;
+
+      return {
+        ...prev,
+        [categorySlug]: {
+          ...category,
+          visible: category.visible === false ? true : false
+        }
+      };
+    });
+  };
+
   return (
-    <ServicesContext.Provider value={{ categories, updateService, addService, deleteService, updateCategory }}>
+    <ServicesContext.Provider value={{ 
+      categories, 
+      updateService, 
+      addService, 
+      deleteService, 
+      updateCategory,
+      addCategory,
+      deleteCategory,
+      toggleCategoryVisibility
+    }}>
       {children}
     </ServicesContext.Provider>
   );

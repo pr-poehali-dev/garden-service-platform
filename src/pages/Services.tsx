@@ -6,12 +6,14 @@ import { useServices } from "@/contexts/ServicesContext";
 const Services = () => {
   const { categories } = useServices();
 
-  const services = Object.keys(categories).map(slug => ({
-    slug,
-    title: categories[slug].title,
-    description: categories[slug].description,
-    icon: categories[slug].icon
-  }));
+  const services = Object.keys(categories)
+    .filter(slug => categories[slug].visible !== false)
+    .map(slug => ({
+      slug,
+      title: categories[slug].title,
+      description: categories[slug].description,
+      icon: categories[slug].icon
+    }));
 
   return (
     <div className="min-h-screen">

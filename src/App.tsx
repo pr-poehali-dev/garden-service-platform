@@ -29,6 +29,7 @@ import AdminContentHomepage from "./pages/AdminContentHomepage";
 import AdminIntegrations from "./pages/AdminIntegrations";
 import AdminApplications from "./pages/AdminApplications";
 import AdminOrdersNew from "./pages/AdminOrdersNew";
+import AdminServicesBlocks from "./pages/AdminServicesBlocks";
 import { OrderProvider } from "./contexts/OrderContext";
 import { OrderRequestProvider } from "./contexts/OrderRequestContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -65,7 +66,8 @@ const App = () => (
                           <Route path="/admin/login" element={<AdminLogin />} />
                           <Route path="/admin/orders" element={<AdminOrders />} />
                           <Route path="/admin/portfolio" element={<AdminPortfolio />} />
-                          <Route path="/admin/services" element={<AdminServices />} />
+                          <Route path="/admin/services" element={<AdminServicesBlocks />} />
+                          <Route path="/admin/services-old" element={<AdminServices />} />
                           <Route path="/admin/contacts" element={<AdminContacts />} />
                           <Route path="/admin/team" element={<AdminTeam />} />
                           <Route path="/admin/content" element={<AdminContent />} />
