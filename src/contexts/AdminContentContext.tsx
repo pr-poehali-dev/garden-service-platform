@@ -334,7 +334,8 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const mockContact: ContactPage = {
+      const savedContact = localStorage.getItem('admin_contact_page');
+      const mockContact: ContactPage = savedContact ? JSON.parse(savedContact) : {
         id: 1,
         phones: ['+7 (999) 123-45-67'],
         messengers: {
@@ -354,14 +355,19 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateContactPage = async (updates: Partial<ContactPage>) => {
-    setContactPage(prev => prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : null);
+    const updated = contactPage ? { ...contactPage, ...updates, updated_at: new Date().toISOString() } : null;
+    setContactPage(updated);
+    if (updated) {
+      localStorage.setItem('admin_contact_page', JSON.stringify(updated));
+    }
   };
 
   const fetchHomepage = async () => {
     setLoading(true);
     setError(null);
     try {
-      const mockHome: Homepage = {
+      const savedHome = localStorage.getItem('admin_homepage');
+      const mockHome: Homepage = savedHome ? JSON.parse(savedHome) : {
         id: 1,
         site_name: 'Садовый Сервис',
         hero_title: 'Профессиональный уход за садом',
@@ -377,7 +383,11 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateHomepage = async (updates: Partial<Homepage>) => {
-    setHomepage(prev => prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : null);
+    const updated = homepage ? { ...homepage, ...updates, updated_at: new Date().toISOString() } : null;
+    setHomepage(updated);
+    if (updated) {
+      localStorage.setItem('admin_homepage', JSON.stringify(updated));
+    }
   };
 
   return (

@@ -8,9 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { AdminNav } from '@/components/admin/AdminNav';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminContentContact() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { contactPage, fetchContactPage, updateContactPage, loading } = useAdminContent();
   
   const [phones, setPhones] = useState<string[]>([]);
@@ -37,14 +39,30 @@ export default function AdminContentContact() {
   }, [contactPage]);
 
   const handleSave = async () => {
-    await updateContactPage({
-      phones,
-      messengers,
-      address,
-      map_embed: mapEmbed,
-      socials,
-      requisites
-    });
+    try {
+      await updateContactPage({
+        phones,
+        messengers,
+        address,
+        map_embed: mapEmbed,
+        socials,
+        requisites
+      });
+      
+      await fetchContactPage();
+      
+      toast({
+        title: "Сохранено!",
+        description: "Контактная информация успешно обновлена"
+      });
+    } catch (error) {
+      console.error('Save error:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось сохранить изменения",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleAddPhone = () => {

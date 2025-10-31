@@ -9,9 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminContentHomepage() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { homepage, fetchHomepage, updateHomepage, loading } = useAdminContent();
   
   const [siteName, setSiteName] = useState('');
@@ -39,15 +41,31 @@ export default function AdminContentHomepage() {
   }, [homepage]);
 
   const handleSave = async () => {
-    await updateHomepage({
-      site_name: siteName,
-      logo,
-      hero_title: heroTitle,
-      hero_subtitle: heroSubtitle,
-      hero_bg: heroBg,
-      meta_title: metaTitle,
-      meta_description: metaDescription
-    });
+    try {
+      await updateHomepage({
+        site_name: siteName,
+        logo,
+        hero_title: heroTitle,
+        hero_subtitle: heroSubtitle,
+        hero_bg: heroBg,
+        meta_title: metaTitle,
+        meta_description: metaDescription
+      });
+      
+      await fetchHomepage();
+      
+      toast({
+        title: "Сохранено!",
+        description: "Настройки главной страницы успешно обновлены"
+      });
+    } catch (error) {
+      console.error('Save error:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось сохранить изменения",
+        variant: "destructive"
+      });
+    }
   };
 
   if (loading) {
