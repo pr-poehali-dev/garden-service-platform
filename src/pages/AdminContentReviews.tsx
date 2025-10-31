@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import func2url from "../../backend/func2url.json";
 
 interface Review {
   id: number;
@@ -22,80 +23,112 @@ const AdminContentReviews = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      id: 1,
-      name: "Анна Петрова",
-      email: "anna@example.com",
-      rating: 5,
-      text: "Отличная работа! Приехали вовремя, все сделали качественно. Газон выглядит идеально, деревья обрезали профессионально.",
-      photos: [],
-      status: "approved",
-      created_at: "2024-10-15T10:00:00"
-    },
-    {
-      id: 2,
-      name: "Сергей Иванов",
-      email: "sergey@example.com",
-      rating: 5,
-      text: "Очень довольны результатом. Создали красивые цветники, установили автополив. Рекомендую!",
-      photos: [],
-      status: "approved",
-      created_at: "2024-10-03T14:30:00"
-    },
-    {
-      id: 3,
-      name: "Мария Смирнова",
-      email: "maria@example.com",
-      rating: 4,
-      text: "Хорошая команда специалистов. Привели участок в порядок после зимы.",
-      photos: [],
-      status: "pending",
-      created_at: "2024-10-28T09:15:00"
-    }
-  ]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isAdmin) {
       navigate("/admin/login");
+    } else {
+      fetchReviews();
     }
   }, [isAdmin, navigate]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(func2url.reviews);
+      const data = await response.json();
+      setReviews(data.reviews || []);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!isAdmin) {
     return null;
   }
 
-  const handleApprove = (id: number) => {
-    setReviews(prev =>
-      prev.map(review =>
-        review.id === id ? { ...review, status: "approved" as const } : review
-      )
-    );
-    toast({
-      title: "Отзыв одобрен",
-      description: "Отзыв будет отображаться на сайте",
-    });
+  const handleApprove = async (id: number) => {
+    try {
+      const response = await fetch(func2url.reviews, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: 'approved' })
+      });
+      
+      if (response.ok) {
+        setReviews(prev =>
+          prev.map(review =>
+            review.id === id ? { ...review, status: "approved" as const } : review
+          )
+        );
+        toast({
+          title: "Отзыв одобрен",
+          description: "Отзыв будет отображаться на сайте",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить отзыв",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleReject = (id: number) => {
-    setReviews(prev =>
-      prev.map(review =>
-        review.id === id ? { ...review, status: "rejected" as const } : review
-      )
-    );
-    toast({
-      title: "Отзыв отклонен",
-      description: "Отзыв не будет отображаться на сайте",
-    });
+  const handleReject = async (id: number) => {
+    try {
+      const response = await fetch(func2url.reviews, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: 'rejected' })
+      });
+      
+      if (response.ok) {
+        setReviews(prev =>
+          prev.map(review =>
+            review.id === id ? { ...review, status: "rejected" as const } : review
+          )
+        );
+        toast({
+          title: "Отзыв отклонен",
+          description: "Отзыв не будет отображаться на сайте",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить отзыв",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleDelete = (id: number) => {
-    setReviews(prev => prev.filter(review => review.id !== id));
-    toast({
-      title: "Отзыв удален",
-      description: "Отзыв удален из базы данных",
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(func2url.reviews, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      
+      if (response.ok) {
+        setReviews(prev => prev.filter(review => review.id !== id));
+        toast({
+          title: "Отзыв удален",
+          description: "Отзыв удален из базы данных",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить отзыв",
+        variant: "destructive"
+      });
+    }
   };
 
   const filteredReviews = filter === "all" 

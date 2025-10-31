@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Icon from "@/components/ui/icon";
 import { useToast } from "@/hooks/use-toast";
+import func2url from "../../backend/func2url.json";
+
+interface Review {
+  id: number;
+  name: string;
+  email: string;
+  rating: number;
+  text: string;
+  photos: string[];
+  status: string;
+  created_at: string;
+}
 
 const Reviews = () => {
   const { toast } = useToast();
@@ -17,41 +29,59 @@ const Reviews = () => {
     photos: [] as string[]
   });
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const reviews = [
-    {
-      id: 1,
-      name: "Анна Петрова",
-      date: "15 октября 2024",
-      rating: 5,
-      text: "Отличная работа! Приехали вовремя, все сделали качественно. Газон выглядит идеально, деревья обрезали профессионально.",
-      photos: []
-    },
-    {
-      id: 2,
-      name: "Сергей Иванов",
-      date: "3 октября 2024",
-      rating: 5,
-      text: "Очень довольны результатом. Создали красивые цветники, установили автополив. Рекомендую!",
-      photos: []
-    },
-    {
-      id: 3,
-      name: "Мария Смирнова",
-      date: "28 сентября 2024",
-      rating: 4,
-      text: "Хорошая команда специалистов. Привели участок в порядок после зимы. Единственное - хотелось бы чуть побыстрее.",
-      photos: []
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`${func2url.reviews}?status=approved`);
+      const data = await response.json();
+      setReviews(data.reviews || []);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Спасибо за отзыв!",
-      description: "Ваш отзыв будет опубликован после модерации.",
-    });
-    setFormData({ name: "", email: "", rating: 5, text: "", photos: [] });
+    
+    try {
+      const response = await fetch(func2url.reviews, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: "Спасибо за отзыв!",
+          description: "Ваш отзыв будет опубликован после модерации.",
+        });
+        setFormData({ name: "", email: "", rating: 5, text: "", photos: [] });
+      } else {
+        toast({
+          title: "Ошибка",
+          description: data.error || "Не удалось отправить отзыв",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось отправить отзыв",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -123,14 +153,34 @@ const Reviews = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            {reviews.map((review) => (
-              <Card key={review.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-xl">{review.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{review.date}</p>
-                    </div>
+            {loading ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <p className="text-muted-foreground">Загрузка отзывов...</p>
+                </CardContent>
+              </Card>
+            ) : reviews.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Icon name="MessageSquare" size={48} className="mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-muted-foreground">Пока нет отзывов. Будьте первым!</p>
+                </CardContent>
+              </Card>
+            ) : (
+              reviews.map((review) => (
+                <Card key={review.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-xl">{review.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {new Date(review.created_at).toLocaleDateString('ru-RU', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })}
+                        </p>
+                      </div>
                     <div className="flex gap-1">
                       {[...Array(5)].map((_, i) => (
                         <Icon
@@ -159,7 +209,8 @@ const Reviews = () => {
                   )}
                 </CardContent>
               </Card>
-            ))}
+              ))
+            )}
           </div>
 
           <div>
