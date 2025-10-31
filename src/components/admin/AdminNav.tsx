@@ -23,7 +23,7 @@ export function AdminNav() {
   const navItems = [
     { path: '/admin/orders', label: 'Заявки', icon: 'Mail' },
     { path: '/admin/content/services', label: 'Услуги', icon: 'Briefcase' },
-    { path: '/admin/content/posts', label: 'Портфолио', icon: 'Image' },
+    { path: '/admin/content/posts', label: 'Наши работы', icon: 'Image' },
     { path: '/admin/content/team', label: 'Команда', icon: 'Users' },
     { path: '/admin/content/contact', label: 'Контакты', icon: 'Phone' },
     { path: '/admin/content/homepage', label: 'Главная', icon: 'Home' }

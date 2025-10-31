@@ -29,7 +29,7 @@ const Portfolio = () => {
           {posts.length === 0 ? (
             <div className="text-center py-20">
               <Icon name="ImageOff" size={64} className="mx-auto text-muted-foreground mb-4 opacity-50" />
-              <h2 className="text-2xl font-bold mb-2">Портфолио пока пусто</h2>
+              <h2 className="text-2xl font-bold mb-2">Работы пока не добавлены</h2>
               <p className="text-muted-foreground">
                 Скоро здесь появятся наши работы
               </p>

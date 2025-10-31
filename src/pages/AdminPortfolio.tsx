@@ -54,7 +54,7 @@ const AdminPortfolio = () => {
       addPost(formData);
       toast({
         title: "Пост создан",
-        description: "Новая работа добавлена в портфолио"
+        description: "Новая работа добавлена"
       });
     }
 
@@ -77,7 +77,7 @@ const AdminPortfolio = () => {
       deletePost(id);
       toast({
         title: "Пост удалён",
-        description: "Работа удалена из портфолио"
+        description: "Работа удалена"
       });
     }
   };
@@ -104,7 +104,7 @@ const AdminPortfolio = () => {
               <Icon name="Image" className="text-white" size={32} />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">Управление портфолио</h1>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2">Наши работы</h1>
               <p className="text-muted-foreground">Создание и редактирование постов</p>
             </div>
           </div>
@@ -119,7 +119,7 @@ const AdminPortfolio = () => {
                 <CardHeader>
                   <CardTitle>{editingId ? "Редактировать пост" : "Создать пост"}</CardTitle>
                   <CardDescription>
-                    {editingId ? "Измените данные и сохраните" : "Добавьте новую работу в портфолио"}
+                    {editingId ? "Измените данные и сохраните" : "Добавьте новую работу"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

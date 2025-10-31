@@ -28,7 +28,7 @@ const AdminContent = () => {
       color: "bg-emerald-500"
     },
     {
-      title: "Портфолио / Посты",
+      title: "Наши работы / Посты",
       description: "Публикации, галереи работ и новости",
       icon: "Image",
       path: "/admin/content/posts",

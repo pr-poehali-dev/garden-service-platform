@@ -154,9 +154,9 @@ export default function AdminContentPosts() {
             <Icon name="ArrowLeft" size={20} />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Портфолио / Блог</h1>
+            <h1 className="text-3xl font-bold">Наши работы / Блог</h1>
             <p className="text-muted-foreground mt-2">
-              Создавайте и управляйте постами портфолио и блога
+              Создавайте и управляйте постами с работами и блога
             </p>
           </div>
         </div>
