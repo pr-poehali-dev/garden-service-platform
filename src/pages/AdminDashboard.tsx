@@ -84,8 +84,8 @@ const AdminDashboard = () => {
       color: "bg-purple-500"
     },
     {
-      title: "Услуги и цены",
-      description: "Редактирование услуг и категорий",
+      title: "Блоки услуг",
+      description: "Редактирование категорий на странице услуг",
       icon: "Briefcase",
       path: "/admin/services",
       badge: null,

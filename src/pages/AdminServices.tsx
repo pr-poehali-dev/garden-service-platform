@@ -21,19 +21,14 @@ import {
 } from "@/components/ui/select";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
-import { useServices, Service, CategoryData } from "@/contexts/ServicesContext";
+import { useServices, CategoryData } from "@/contexts/ServicesContext";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminServices = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  const { categories, updateService, deleteService, addService, updateCategory } = useServices();
+  const { categories, updateCategory } = useServices();
   const { toast } = useToast();
-
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [editingService, setEditingService] = useState<Service | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isAddingNew, setIsAddingNew] = useState(false);
   
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<{slug: string} & CategoryData | null>(null);
@@ -41,12 +36,6 @@ const AdminServices = () => {
     title: "",
     description: "",
     icon: "Briefcase"
-  });
-
-  const [formData, setFormData] = useState({
-    name: "",
-    price: 0,
-    unit: ""
   });
 
   useEffect(() => {
@@ -63,64 +52,6 @@ const AdminServices = () => {
     slug,
     ...categories[slug]
   }));
-
-  const handleEditService = (categorySlug: string, service: Service) => {
-    setSelectedCategory(categorySlug);
-    setEditingService(service);
-    setFormData({
-      name: service.name,
-      price: service.price,
-      unit: service.unit
-    });
-    setIsAddingNew(false);
-    setIsDialogOpen(true);
-  };
-
-  const handleAddService = (categorySlug: string) => {
-    setSelectedCategory(categorySlug);
-    setEditingService(null);
-    setFormData({
-      name: "",
-      price: 0,
-      unit: "шт"
-    });
-    setIsAddingNew(true);
-    setIsDialogOpen(true);
-  };
-
-  const handleSaveService = () => {
-    if (!selectedCategory) return;
-
-    if (isAddingNew) {
-      const newId = `new_${Date.now()}`;
-      addService(selectedCategory, {
-        id: newId,
-        ...formData
-      });
-      toast({
-        title: "Услуга добавлена",
-        description: `Услуга "${formData.name}" успешно добавлена`
-      });
-    } else if (editingService) {
-      updateService(selectedCategory, editingService.id, formData);
-      toast({
-        title: "Услуга обновлена",
-        description: `Услуга "${formData.name}" успешно обновлена`
-      });
-    }
-
-    setIsDialogOpen(false);
-  };
-
-  const handleDeleteService = (categorySlug: string, serviceId: string, serviceName: string) => {
-    if (confirm(`Удалить услугу "${serviceName}"?`)) {
-      deleteService(categorySlug, serviceId);
-      toast({
-        title: "Услуга удалена",
-        description: `Услуга "${serviceName}" удалена`
-      });
-    }
-  };
 
   const handleEditCategory = (slug: string) => {
     const category = categories[slug];
@@ -145,39 +76,6 @@ const AdminServices = () => {
     setIsCategoryDialogOpen(false);
   };
 
-  const commonUnits = [
-    "шт",
-    "сотка",
-    "м²",
-    "м³",
-    "дерево",
-    "куст",
-    "растение",
-    "участок",
-    "комплекс",
-    "проект",
-    "услуга",
-    "месяц",
-    "год",
-    "выезд",
-    "система",
-    "дом",
-    "теплица",
-    "клумба",
-    "пень",
-    "крыша",
-    "водоём",
-    "рейс",
-    "машина",
-    "помещение",
-    "цветник",
-    "горка",
-    "объект",
-    "сезон",
-    "бесплатно",
-    "включено"
-  ];
-
   const commonIcons = [
     "TreeDeciduous", "Bug", "Sprout", "Flower2", "Home", 
     "Trash2", "Snowflake", "Calendar", "Briefcase", "Leaf",
@@ -198,8 +96,8 @@ const AdminServices = () => {
               <Icon name="Briefcase" className="text-white" size={32} />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">Редактирование услуг</h1>
-              <p className="text-muted-foreground">Управление категориями, ценами и единицами измерения</p>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2">Управление услугами</h1>
+              <p className="text-muted-foreground">Редактирование блоков категорий на странице услуг</p>
             </div>
           </div>
         </div>
@@ -207,64 +105,73 @@ const AdminServices = () => {
 
       <section className="py-12">
         <div className="container mx-auto px-4">
+          <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+            <div className="flex items-start gap-3">
+              <Icon name="Info" className="text-blue-500 mt-1" size={20} />
+              <div>
+                <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                  Редактирование услуг и цен
+                </h3>
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  Для детального управления услугами, ценами и описаниями перейдите в раздел{" "}
+                  <Link to="/admin/content/services" className="underline font-medium hover:text-blue-600">
+                    Контент → Услуги
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-6">
             {categoryList.map(({ slug, title, description, icon, services }) => (
               <Card key={slug}>
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3 flex-1">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Icon name={icon} className="text-primary" size={24} />
                       </div>
-                      <div>
-                        <CardTitle>{title}</CardTitle>
-                        <CardDescription>{description}</CardDescription>
+                      <div className="flex-1">
+                        <CardTitle className="mb-2">{title}</CardTitle>
+                        <CardDescription className="mb-1">{description}</CardDescription>
+                        <CardDescription className="text-xs">{services.length} услуг в категории</CardDescription>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button onClick={() => handleEditCategory(slug)} variant="outline" size="sm" className="gap-2">
-                        <Icon name="Edit" size={16} />
-                        Редактировать блок
-                      </Button>
-                      <Button onClick={() => handleAddService(slug)} size="sm" className="gap-2">
-                        <Icon name="Plus" size={16} />
-                        Добавить услугу
-                      </Button>
-                    </div>
+                    <Button onClick={() => handleEditCategory(slug)} variant="outline" size="sm" className="gap-2 flex-shrink-0">
+                      <Icon name="Edit" size={16} />
+                      Редактировать блок
+                    </Button>
                   </div>
-                  <CardDescription className="text-xs">{services.length} услуг в категории</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    {services.map(service => (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {services.slice(0, 6).map(service => (
                       <div
                         key={service.id}
-                        className="flex items-center justify-between p-3 rounded-lg border hover:bg-secondary/50 transition-colors"
+                        className="p-3 rounded-lg border bg-secondary/30 text-sm"
                       >
-                        <div className="flex-1">
-                          <h4 className="font-medium">{service.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {service.price.toLocaleString()} ₽ / {service.unit}
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleEditService(slug, service)}
-                          >
-                            <Icon name="Edit" size={16} />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteService(slug, service.id, service.name)}
-                          >
-                            <Icon name="Trash2" size={16} />
-                          </Button>
+                        <div className="font-medium truncate">{service.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {service.price.toLocaleString()} ₽ / {service.unit}
                         </div>
                       </div>
                     ))}
+                    {services.length > 6 && (
+                      <div className="p-3 rounded-lg border bg-secondary/30 text-sm flex items-center justify-center text-muted-foreground">
+                        +{services.length - 6} ещё
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-4 pt-4 border-t">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => navigate('/admin/content/services')}
+                      className="w-full gap-2"
+                    >
+                      <Icon name="Edit" size={16} />
+                      Управлять услугами в этой категории
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -273,79 +180,12 @@ const AdminServices = () => {
         </div>
       </section>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {isAddingNew ? "Добавить услугу" : "Редактировать услугу"}
-            </DialogTitle>
-            <DialogDescription>
-              Укажите название, цену и единицу измерения
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Название услуги</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={e => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Например: Стрижка газона"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="price">Цена (₽)</Label>
-              <Input
-                id="price"
-                type="number"
-                value={formData.price}
-                onChange={e => setFormData({ ...formData, price: Number(e.target.value) })}
-                placeholder="1000"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="unit">Единица измерения</Label>
-              <Select
-                value={formData.unit}
-                onValueChange={value => setFormData({ ...formData, unit: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Выберите единицу" />
-                </SelectTrigger>
-                <SelectContent>
-                  {commonUnits.map(unit => (
-                    <SelectItem key={unit} value={unit}>
-                      {unit}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground mt-1">
-                Например: шт, сотка, м², дерево, куст
-              </p>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Отмена
-            </Button>
-            <Button onClick={handleSaveService}>
-              {isAddingNew ? "Добавить" : "Сохранить"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
       <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Редактировать блок</DialogTitle>
+            <DialogTitle>Редактировать блок категории</DialogTitle>
             <DialogDescription>
-              Измените название, описание и иконку блока услуг
+              Измените название, описание и иконку блока на странице услуг
             </DialogDescription>
           </DialogHeader>
 
