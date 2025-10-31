@@ -6,12 +6,14 @@ import Icon from "@/components/ui/icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrderRequests } from "@/contexts/OrderRequestContext";
 import { usePortfolio } from "@/contexts/PortfolioContext";
+import { useAdminContent } from "@/contexts/AdminContentContext";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
   const { isAdmin, logout } = useAuth();
   const { requests } = useOrderRequests();
   const { posts } = usePortfolio();
+  const { homepage, fetchHomepage } = useAdminContent();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -20,6 +22,10 @@ const AdminDashboard = () => {
       navigate("/admin/login");
     }
   }, [isAdmin, navigate]);
+
+  useEffect(() => {
+    fetchHomepage();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -110,7 +116,7 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">Админ-панель</h1>
-              <p className="text-muted-foreground text-lg">Управление сайтом Тимирязевец</p>
+              <p className="text-muted-foreground text-lg">Управление сайтом {homepage?.site_name || "Тимирязевец"}</p>
             </div>
             <Button onClick={handleLogout} variant="outline" size="lg">
               <Icon name="LogOut" className="mr-2" size={18} />

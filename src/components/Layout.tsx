@@ -214,7 +214,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <div className="border-t border-background/20 pt-8 text-center text-background/60">
-            <p>© 2024 Тимирязевец. Все права защищены.</p>
+            <p>© 2024 {homepage?.site_name || "Тимирязевец"}. Все права защищены.</p>
           </div>
         </div>
       </footer>
