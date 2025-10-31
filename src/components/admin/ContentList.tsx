@@ -29,6 +29,7 @@ interface ContentListProps<T extends ContentItem> {
   onItemCreate: () => void;
   onItemToggleVisibility: (id: number) => void;
   onItemRestore?: (id: number) => void;
+  onItemRemove?: (id: number) => void;
   renderItemDetails?: (item: T) => React.ReactNode;
   createButtonText?: string;
   emptyText?: string;
@@ -43,6 +44,7 @@ export function ContentList<T extends ContentItem>({
   onItemCreate,
   onItemToggleVisibility,
   onItemRestore,
+  onItemRemove,
   renderItemDetails,
   createButtonText = 'Создать',
   emptyText = 'Нет элементов',
@@ -151,14 +153,27 @@ export function ContentList<T extends ContentItem>({
                         <Icon name="RotateCcw" size={16} />
                       </Button>
                     ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onItemToggleVisibility(item.id)}
-                        title={item.visible ? 'Скрыть' : 'Показать'}
-                      >
-                        <Icon name={item.visible ? 'EyeOff' : 'Eye'} size={16} />
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onItemToggleVisibility(item.id)}
+                          title={item.visible ? 'Скрыть' : 'Показать'}
+                        >
+                          <Icon name={item.visible ? 'EyeOff' : 'Eye'} size={16} />
+                        </Button>
+                        
+                        {onItemRemove && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => onItemRemove(item.id)}
+                            title="Удалить"
+                          >
+                            <Icon name="Trash2" size={16} />
+                          </Button>
+                        )}
+                      </>
                     )}
                     
                     <Button

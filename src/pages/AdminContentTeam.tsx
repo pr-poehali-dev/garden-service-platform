@@ -171,6 +171,10 @@ export default function AdminContentTeam() {
           restoreTeamMember(id);
           fetchTeamMembers(true);
         }}
+        onItemRemove={(id) => {
+          softRemoveTeamMember(id);
+          fetchTeamMembers(true);
+        }}
         renderItemDetails={(member) => (
           <div className="flex items-center gap-3">
             {member.photo && (
