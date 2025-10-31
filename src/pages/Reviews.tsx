@@ -13,8 +13,10 @@ const Reviews = () => {
     name: "",
     email: "",
     rating: 5,
-    text: ""
+    text: "",
+    photos: [] as string[]
   });
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const reviews = [
     {
@@ -22,21 +24,24 @@ const Reviews = () => {
       name: "Анна Петрова",
       date: "15 октября 2024",
       rating: 5,
-      text: "Отличная работа! Приехали вовремя, все сделали качественно. Газон выглядит идеально, деревья обрезали профессионально."
+      text: "Отличная работа! Приехали вовремя, все сделали качественно. Газон выглядит идеально, деревья обрезали профессионально.",
+      photos: []
     },
     {
       id: 2,
       name: "Сергей Иванов",
       date: "3 октября 2024",
       rating: 5,
-      text: "Очень довольны результатом. Создали красивые цветники, установили автополив. Рекомендую!"
+      text: "Очень довольны результатом. Создали красивые цветники, установили автополив. Рекомендую!",
+      photos: []
     },
     {
       id: 3,
       name: "Мария Смирнова",
       date: "28 сентября 2024",
       rating: 4,
-      text: "Хорошая команда специалистов. Привели участок в порядок после зимы. Единственное - хотелось бы чуть побыстрее."
+      text: "Хорошая команда специалистов. Привели участок в порядок после зимы. Единственное - хотелось бы чуть побыстрее.",
+      photos: []
     }
   ];
 
@@ -46,13 +51,63 @@ const Reviews = () => {
       title: "Спасибо за отзыв!",
       description: "Ваш отзыв будет опубликован после модерации.",
     });
-    setFormData({ name: "", email: "", rating: 5, text: "" });
+    setFormData({ name: "", email: "", rating: 5, text: "", photos: [] });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
+    }));
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingPhoto(true);
+    
+    try {
+      const newPhotos: string[] = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        const photoUrl = await new Promise<string>((resolve) => {
+          reader.onloadend = () => {
+            resolve(reader.result as string);
+          };
+          reader.readAsDataURL(file);
+        });
+        
+        newPhotos.push(photoUrl);
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        photos: [...prev.photos, ...newPhotos]
+      }));
+      
+      toast({
+        title: "Фото загружены",
+        description: `Добавлено фотографий: ${newPhotos.length}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить фото",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
     }));
   };
 
@@ -89,7 +144,19 @@ const Reviews = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{review.text}</p>
+                  <p className="text-muted-foreground leading-relaxed mb-4">{review.text}</p>
+                  {review.photos && review.photos.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {review.photos.map((photo, idx) => (
+                        <img
+                          key={idx}
+                          src={photo}
+                          alt={`Фото ${idx + 1}`}
+                          className="w-full h-32 object-cover rounded-lg hover:scale-105 transition-transform cursor-pointer"
+                        />
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -165,6 +232,50 @@ const Reviews = () => {
                       rows={6}
                       required
                     />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="photos">Фотографии (необязательно)</Label>
+                    <div className="mt-2">
+                      <label htmlFor="photo-upload" className="cursor-pointer">
+                        <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center hover:border-primary transition-colors">
+                          <Icon name="ImagePlus" size={32} className="mx-auto mb-2 text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground">
+                            {uploadingPhoto ? "Загрузка..." : "Нажмите, чтобы загрузить фото"}
+                          </p>
+                        </div>
+                      </label>
+                      <input
+                        id="photo-upload"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        disabled={uploadingPhoto}
+                      />
+                    </div>
+                    
+                    {formData.photos.length > 0 && (
+                      <div className="grid grid-cols-3 gap-2 mt-3">
+                        {formData.photos.map((photo, idx) => (
+                          <div key={idx} className="relative group">
+                            <img
+                              src={photo}
+                              alt={`Фото ${idx + 1}`}
+                              className="w-full h-20 object-cover rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removePhoto(idx)}
+                              className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Icon name="X" size={14} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <Button type="submit" className="w-full">
