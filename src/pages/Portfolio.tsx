@@ -17,17 +17,9 @@ const Portfolio = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Наши работы
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-xl text-muted-foreground">
               Реализованные проекты по уходу за садом и ландшафтному дизайну
             </p>
-            {isAdmin && (
-              <Link to="/admin">
-                <Button size="lg" className="gap-2">
-                  <Icon name="Settings" size={20} />
-                  Управление портфолио
-                </Button>
-              </Link>
-            )}
           </div>
         </div>
       </section>
@@ -38,19 +30,9 @@ const Portfolio = () => {
             <div className="text-center py-20">
               <Icon name="ImageOff" size={64} className="mx-auto text-muted-foreground mb-4 opacity-50" />
               <h2 className="text-2xl font-bold mb-2">Портфолио пока пусто</h2>
-              <p className="text-muted-foreground mb-6">
-                {isAdmin 
-                  ? "Добавьте первый проект через админ-панель" 
-                  : "Скоро здесь появятся наши работы"}
+              <p className="text-muted-foreground">
+                Скоро здесь появятся наши работы
               </p>
-              {isAdmin && (
-                <Link to="/admin">
-                  <Button size="lg">
-                    <Icon name="Plus" className="mr-2" size={20} />
-                    Добавить проект
-                  </Button>
-                </Link>
-              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
