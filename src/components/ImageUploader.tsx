@@ -72,7 +72,7 @@ export const ImageUploader = ({ value, onChange, onClear }: ImageUploaderProps) 
       
       toast({
         title: "Изображение загружено",
-        description: `Файл ${file.name} успешно сохранён на сервере`
+        description: `Файл ${file.name} загружен. Нажмите "Сохранить изменения" для применения`
       });
     } catch (error) {
       toast({

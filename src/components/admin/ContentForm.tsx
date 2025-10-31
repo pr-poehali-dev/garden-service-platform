@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,6 +47,17 @@ export function ContentForm({
   onBack,
   isNew = false
 }: ContentFormProps) {
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const handleChange = (name: string, value: unknown) => {
+    setHasUnsavedChanges(true);
+    onChange(name, value);
+  };
+
+  const handleSave = () => {
+    onSave();
+    setHasUnsavedChanges(false);
+  };
   const renderField = (field: Field) => {
     const value = values[field.name];
 
@@ -56,7 +68,7 @@ export function ContentForm({
             id={field.name}
             placeholder={field.placeholder}
             value={value as string || ''}
-            onChange={(e) => onChange(field.name, e.target.value)}
+            onChange={(e) => handleChange(field.name, e.target.value)}
             rows={4}
           />
         );
@@ -68,7 +80,7 @@ export function ContentForm({
             type="number"
             placeholder={field.placeholder}
             value={value as number || ''}
-            onChange={(e) => onChange(field.name, parseFloat(e.target.value) || 0)}
+            onChange={(e) => handleChange(field.name, parseFloat(e.target.value) || 0)}
           />
         );
 
@@ -78,7 +90,7 @@ export function ContentForm({
             id={field.name}
             type="datetime-local"
             value={value as string || ''}
-            onChange={(e) => onChange(field.name, e.target.value)}
+            onChange={(e) => handleChange(field.name, e.target.value)}
           />
         );
 
@@ -93,7 +105,7 @@ export function ContentForm({
                   const input = e.currentTarget;
                   if (input.value) {
                     const currentImages = (value as string[]) || [];
-                    onChange(field.name, [...currentImages, input.value]);
+                    handleChange(field.name, [...currentImages, input.value]);
                     input.value = '';
                   }
                 }
@@ -109,7 +121,7 @@ export function ContentForm({
                     className="absolute -top-2 -right-2 w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={() => {
                       const currentImages = (value as string[]) || [];
-                      onChange(field.name, currentImages.filter((_, i) => i !== idx));
+                      handleChange(field.name, currentImages.filter((_, i) => i !== idx));
                     }}
                   >
                     <Icon name="X" size={14} />
@@ -133,7 +145,7 @@ export function ContentForm({
             <TabsContent value="upload" className="mt-3">
               <ImageUploader
                 value={value as string || ''}
-                onChange={(dataUrl) => onChange(field.name, dataUrl)}
+                onChange={(dataUrl) => handleChange(field.name, dataUrl)}
               />
             </TabsContent>
             <TabsContent value="url" className="mt-3">
@@ -142,7 +154,7 @@ export function ContentForm({
                 type="url"
                 placeholder={field.placeholder || 'https://example.com/image.jpg'}
                 value={value as string || ''}
-                onChange={(e) => onChange(field.name, e.target.value)}
+                onChange={(e) => handleChange(field.name, e.target.value)}
               />
             </TabsContent>
           </Tabs>
@@ -154,7 +166,7 @@ export function ContentForm({
             id={field.name}
             placeholder={field.placeholder}
             value={value as string || ''}
-            onChange={(e) => onChange(field.name, e.target.value)}
+            onChange={(e) => handleChange(field.name, e.target.value)}
           />
         );
     }
@@ -168,6 +180,7 @@ export function ContentForm({
             <Icon name="ArrowLeft" size={18} />
           </Button>
           <h2 className="text-2xl font-bold">{title}</h2>
+          {hasUnsavedChanges && <Badge variant="outline" className="bg-yellow-100 text-yellow-800">Несохраненные изменения</Badge>}
           {isRemoved ? (
             <Badge variant="destructive">Удалено</Badge>
           ) : visible ? (
@@ -199,9 +212,9 @@ export function ContentForm({
             </>
           )}
           
-          <Button onClick={onSave}>
+          <Button onClick={handleSave} variant={hasUnsavedChanges ? "default" : "outline"}>
             <Icon name="Save" size={18} className="mr-2" />
-            Сохранить
+            {hasUnsavedChanges ? 'Сохранить изменения' : 'Сохранено'}
           </Button>
         </div>
       </div>
