@@ -19,12 +19,24 @@ export default function AdminContentHomepage() {
   const { homepage, fetchHomepage, updateHomepage, loading } = useAdminContent();
   
   const [siteName, setSiteName] = useState('');
+  const [siteNameSize, setSiteNameSize] = useState('24');
   const [logo, setLogo] = useState('');
+  const [logoSize, setLogoSize] = useState('48');
   const [heroTitle, setHeroTitle] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('');
   const [heroBg, setHeroBg] = useState('');
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
+  const [favicon, setFavicon] = useState('');
+  const [pageTitle, setPageTitle] = useState('');
+  const [footerLogo, setFooterLogo] = useState('');
+  const [footerLogoSize, setFooterLogoSize] = useState('48');
+  const [footerSiteName, setFooterSiteName] = useState('');
+  const [footerSiteNameSize, setFooterSiteNameSize] = useState('24');
+  const [footerDescription, setFooterDescription] = useState('');
+  const [footerDescriptionSize, setFooterDescriptionSize] = useState('14');
+  const [footerCopyright, setFooterCopyright] = useState('');
+  const [footerCopyrightSize, setFooterCopyrightSize] = useState('14');
 
   useEffect(() => {
     fetchHomepage();
@@ -33,12 +45,24 @@ export default function AdminContentHomepage() {
   useEffect(() => {
     if (homepage) {
       setSiteName(homepage.site_name || '');
+      setSiteNameSize(homepage.site_name_size || '24');
       setLogo(homepage.logo || '');
+      setLogoSize(homepage.logo_size || '48');
       setHeroTitle(homepage.hero_title || '');
       setHeroSubtitle(homepage.hero_subtitle || '');
       setHeroBg(homepage.hero_bg || '');
       setMetaTitle(homepage.meta_title || '');
       setMetaDescription(homepage.meta_description || '');
+      setFavicon(homepage.favicon || '');
+      setPageTitle(homepage.page_title || '');
+      setFooterLogo(homepage.footer_logo || '');
+      setFooterLogoSize(homepage.footer_logo_size || '48');
+      setFooterSiteName(homepage.footer_site_name || '');
+      setFooterSiteNameSize(homepage.footer_site_name_size || '24');
+      setFooterDescription(homepage.footer_description || '');
+      setFooterDescriptionSize(homepage.footer_description_size || '14');
+      setFooterCopyright(homepage.footer_copyright || '');
+      setFooterCopyrightSize(homepage.footer_copyright_size || '14');
     }
   }, [homepage]);
 
@@ -46,12 +70,24 @@ export default function AdminContentHomepage() {
     try {
       await updateHomepage({
         site_name: siteName,
+        site_name_size: siteNameSize,
         logo,
+        logo_size: logoSize,
         hero_title: heroTitle,
         hero_subtitle: heroSubtitle,
         hero_bg: heroBg,
         meta_title: metaTitle,
-        meta_description: metaDescription
+        meta_description: metaDescription,
+        favicon,
+        page_title: pageTitle,
+        footer_logo: footerLogo,
+        footer_logo_size: footerLogoSize,
+        footer_site_name: footerSiteName,
+        footer_site_name_size: footerSiteNameSize,
+        footer_description: footerDescription,
+        footer_description_size: footerDescriptionSize,
+        footer_copyright: footerCopyright,
+        footer_copyright_size: footerCopyrightSize
       });
       
       await fetchHomepage();
@@ -109,7 +145,7 @@ export default function AdminContentHomepage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Основные настройки</CardTitle>
+            <CardTitle>Шапка сайта</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -118,6 +154,15 @@ export default function AdminContentHomepage() {
                 placeholder="Садовый Сервис"
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Размер названия (px)</Label>
+              <Input
+                type="number"
+                placeholder="24"
+                value={siteNameSize}
+                onChange={(e) => setSiteNameSize(e.target.value)}
               />
             </div>
             <div>
@@ -142,6 +187,15 @@ export default function AdminContentHomepage() {
                   />
                 </TabsContent>
               </Tabs>
+            </div>
+            <div>
+              <Label>Размер логотипа (px)</Label>
+              <Input
+                type="number"
+                placeholder="48"
+                value={logoSize}
+                onChange={(e) => setLogoSize(e.target.value)}
+              />
             </div>
           </CardContent>
         </Card>
@@ -195,9 +249,155 @@ export default function AdminContentHomepage() {
 
         <Card className="md:col-span-2">
           <CardHeader>
+            <CardTitle>Футер сайта</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Логотип в футере</Label>
+                <Tabs defaultValue="upload" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload">Загрузить файл</TabsTrigger>
+                    <TabsTrigger value="url">Вставить URL</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="upload" className="mt-3">
+                    <ImageUploader
+                      value={footerLogo}
+                      onChange={setFooterLogo}
+                    />
+                  </TabsContent>
+                  <TabsContent value="url" className="mt-3">
+                    <Input
+                      type="url"
+                      placeholder="https://example.com/footer-logo.png"
+                      value={footerLogo}
+                      onChange={(e) => setFooterLogo(e.target.value)}
+                    />
+                  </TabsContent>
+                </Tabs>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Если не указан, используется логотип из шапки
+                </p>
+              </div>
+              <div>
+                <Label>Размер логотипа в футере (px)</Label>
+                <Input
+                  type="number"
+                  placeholder="48"
+                  value={footerLogoSize}
+                  onChange={(e) => setFooterLogoSize(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Название сайта в футере</Label>
+                <Input
+                  placeholder="Садовый Сервис"
+                  value={footerSiteName}
+                  onChange={(e) => setFooterSiteName(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Если не указано, используется основное название
+                </p>
+              </div>
+              <div>
+                <Label>Размер названия в футере (px)</Label>
+                <Input
+                  type="number"
+                  placeholder="24"
+                  value={footerSiteNameSize}
+                  onChange={(e) => setFooterSiteNameSize(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Описание под логотипом</Label>
+                <Textarea
+                  placeholder="Профессиональный уход за садом и участком"
+                  value={footerDescription}
+                  onChange={(e) => setFooterDescription(e.target.value)}
+                  rows={2}
+                />
+              </div>
+              <div>
+                <Label>Размер описания (px)</Label>
+                <Input
+                  type="number"
+                  placeholder="14"
+                  value={footerDescriptionSize}
+                  onChange={(e) => setFooterDescriptionSize(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Копирайт (внизу футера)</Label>
+                <Input
+                  placeholder="© 2024 ТимГарден. Все права защищены."
+                  value={footerCopyright}
+                  onChange={(e) => setFooterCopyright(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Размер копирайта (px)</Label>
+                <Input
+                  type="number"
+                  placeholder="14"
+                  value={footerCopyrightSize}
+                  onChange={(e) => setFooterCopyrightSize(e.target.value)}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="md:col-span-2">
+          <CardHeader>
             <CardTitle>SEO настройки</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Favicon</Label>
+                <Tabs defaultValue="upload" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload">Загрузить файл</TabsTrigger>
+                    <TabsTrigger value="url">Вставить URL</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="upload" className="mt-3">
+                    <ImageUploader
+                      value={favicon}
+                      onChange={setFavicon}
+                    />
+                  </TabsContent>
+                  <TabsContent value="url" className="mt-3">
+                    <Input
+                      type="url"
+                      placeholder="https://example.com/favicon.ico"
+                      value={favicon}
+                      onChange={(e) => setFavicon(e.target.value)}
+                    />
+                  </TabsContent>
+                </Tabs>
+              </div>
+              <div>
+                <Label>Заголовок страницы (Title)</Label>
+                <Input
+                  placeholder="Садовый Сервис"
+                  value={pageTitle}
+                  onChange={(e) => setPageTitle(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Отображается во вкладке браузера
+                </p>
+              </div>
+            </div>
+            
             <div>
               <Label>Meta Title</Label>
               <Input

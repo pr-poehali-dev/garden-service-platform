@@ -44,14 +44,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <img 
                   src={homepage.logo} 
                   alt={homepage.site_name || "Логотип"} 
-                  className="h-12 object-contain group-hover:scale-110 transition-transform"
+                  style={{ height: `${homepage?.logo_size || '48'}px` }}
+                  className="object-contain group-hover:scale-110 transition-transform"
                 />
               ) : (
-                <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div 
+                  style={{ 
+                    width: `${homepage?.logo_size || '48'}px`, 
+                    height: `${homepage?.logo_size || '48'}px` 
+                  }}
+                  className="bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+                >
                   <Icon name="TreeDeciduous" className="text-primary-foreground" size={28} />
                 </div>
               )}
-              <span className="text-2xl font-bold">{homepage?.site_name || "Тимирязевец"}</span>
+              <span 
+                style={{ fontSize: `${homepage?.site_name_size || '24'}px` }}
+                className="font-bold"
+              >
+                {homepage?.site_name || "Тимирязевец"}
+              </span>
             </Link>
 
             <div className="hidden md:flex items-center gap-1">
@@ -122,23 +134,36 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <div className="flex items-center gap-2 mb-4">
                 <button
                   onClick={() => navigate('/admin')}
-                  className="w-12 h-12 bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
+                  style={{ 
+                    width: `${homepage?.footer_logo_size || '48'}px`, 
+                    height: `${homepage?.footer_logo_size || '48'}px` 
+                  }}
+                  className="bg-background/10 hover:bg-background/20 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Админ-панель"
                 >
-                  {homepage?.logo ? (
+                  {(homepage?.footer_logo || homepage?.logo) ? (
                     <img 
-                      src={homepage.logo} 
+                      src={homepage?.footer_logo || homepage?.logo || ''} 
                       alt="Логотип" 
-                      className="h-10 object-contain"
+                      style={{ height: `${parseInt(homepage?.footer_logo_size || '48') - 8}px` }}
+                      className="object-contain"
                     />
                   ) : (
                     <Icon name="TreeDeciduous" className="text-background" size={28} />
                   )}
                 </button>
-                <span className="text-2xl font-bold">{homepage?.site_name || "Тимирязевец"}</span>
+                <span 
+                  style={{ fontSize: `${homepage?.footer_site_name_size || '24'}px` }}
+                  className="font-bold"
+                >
+                  {homepage?.footer_site_name || homepage?.site_name || "Тимирязевец"}
+                </span>
               </div>
-              <p className="text-background/70">
-                {homepage?.hero_subtitle || "Профессиональный уход за садом и участком"}
+              <p 
+                style={{ fontSize: `${homepage?.footer_description_size || '14'}px` }}
+                className="text-background/70"
+              >
+                {homepage?.footer_description || homepage?.hero_subtitle || "Профессиональный уход за садом и участком"}
               </p>
             </div>
 
@@ -220,7 +245,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <div className="border-t border-background/20 pt-8 text-center text-background/60">
-            <p>© 2024 {homepage?.site_name || "Тимирязевец"}. Все права защищены.</p>
+            <p style={{ fontSize: `${homepage?.footer_copyright_size || '14'}px` }}>
+              {homepage?.footer_copyright || `© 2024 ${homepage?.site_name || "Тимирязевец"}. Все права защищены.`}
+            </p>
           </div>
         </div>
       </footer>

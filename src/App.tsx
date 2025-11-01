@@ -1,4 +1,5 @@
-
+import { useEffect } from "react";
+import { useAdminContent } from "./contexts/AdminContentContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -42,20 +43,27 @@ import { AdminContentProvider } from "./contexts/AdminContentContext";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <SiteSettingsProvider>
-            <ServicesProvider>
-              <PortfolioProvider>
-                <OrderRequestProvider>
-                  <OrderProvider>
-                    <AdminContentProvider>
-                      <Layout>
+const App = () => {
+  const { homepage } = useAdminContent();
+
+  useEffect(() => {
+    if (homepage?.page_title) {
+      document.title = homepage.page_title;
+    }
+    
+    if (homepage?.favicon) {
+      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      link.href = homepage.favicon;
+    }
+  }, [homepage?.page_title, homepage?.favicon]);
+
+  return (
+    <Layout>
                         <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/services" element={<Services />} />
@@ -84,7 +92,24 @@ const App = () => (
                           <Route path="/admin/orders-new" element={<AdminOrdersNew />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
-                      </Layout>
+    </Layout>
+  );
+};
+
+const AppWrapper = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <AuthProvider>
+          <SiteSettingsProvider>
+            <ServicesProvider>
+              <PortfolioProvider>
+                <OrderRequestProvider>
+                  <OrderProvider>
+                    <AdminContentProvider>
+                      <App />
                     </AdminContentProvider>
                   </OrderProvider>
                 </OrderRequestProvider>
@@ -97,4 +122,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App;
+export default AppWrapper;

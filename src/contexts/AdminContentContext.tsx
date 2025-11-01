@@ -74,7 +74,9 @@ export interface ContactPage {
 export interface Homepage {
   id: number;
   site_name?: string;
+  site_name_size?: string;
   logo?: string;
+  logo_size?: string;
   hero_title?: string;
   hero_subtitle?: string;
   hero_bg?: string;
@@ -84,6 +86,16 @@ export interface Homepage {
   }>;
   meta_title?: string;
   meta_description?: string;
+  favicon?: string;
+  page_title?: string;
+  footer_logo?: string;
+  footer_logo_size?: string;
+  footer_site_name?: string;
+  footer_site_name_size?: string;
+  footer_description?: string;
+  footer_description_size?: string;
+  footer_copyright?: string;
+  footer_copyright_size?: string;
   updated_at?: string;
 }
 
