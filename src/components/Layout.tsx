@@ -13,10 +13,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const { items } = useOrder();
   const { contacts } = useSiteSettings();
   const { homepage, fetchHomepage } = useAdminContent();
+  const [footerKey, setFooterKey] = useState(0);
 
   useEffect(() => {
     fetchHomepage();
   }, []);
+
+  useEffect(() => {
+    setFooterKey(prev => prev + 1);
+  }, [contacts]);
 
   const navigation = [
     { name: "Главная", path: "/" },
@@ -110,7 +115,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <main className="flex-grow">{children}</main>
 
-      <footer className="bg-foreground text-background py-12">
+      <footer key={footerKey} className="bg-foreground text-background py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
