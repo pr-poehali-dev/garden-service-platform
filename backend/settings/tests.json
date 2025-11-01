@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "Get all settings",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Update site settings",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "section": "siteSettings",
+        "data": {
+          "site_name": "Test Site",
+          "logo_size": 50
+        }
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

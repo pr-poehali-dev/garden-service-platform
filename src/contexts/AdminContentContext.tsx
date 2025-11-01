@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
+import FUNC_URLS from '../../backend/func2url.json';
 
 export interface ContentService {
   id: number;
@@ -320,7 +321,7 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
 
   const createTeamMember = async (member: Omit<ContentTeamMember, 'id' | 'created_at'>) => {
     try {
-      const response = await fetch('https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034', {
+      const response = await fetch(FUNC_URLS.team, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -352,7 +353,7 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
       const member = teamMembers.find(m => m.id === id);
       if (!member) return;
       
-      const response = await fetch('https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034', {
+      const response = await fetch(FUNC_URLS.team, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -376,13 +377,17 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   const toggleTeamMemberVisibility = async (id: number) => {
     const member = teamMembers.find(m => m.id === id);
     if (member) {
-      await updateTeamMember(id, { visible: !member.visible });
+      try {
+        await updateTeamMember(id, { visible: !member.visible });
+      } catch (err) {
+        // Error already handled in updateTeamMember
+      }
     }
   };
 
   const softRemoveTeamMember = async (id: number) => {
     try {
-      const response = await fetch(`https://functions.poehali.dev/9018c722-ce86-4b29-84e0-c715ce7b4034?id=${id}`, {
+      const response = await fetch(`${FUNC_URLS.team}?id=${id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Ошибка удаления');
@@ -393,17 +398,21 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const restoreTeamMember = async (id: number) => {
-    await updateTeamMember(id, { removed_at: undefined });
+    try {
+      await updateTeamMember(id, { removed_at: undefined });
+    } catch (err) {
+      // Error already handled in updateTeamMember
+    }
   };
 
   const fetchContactPage = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://functions.poehali.dev/56fd2c98-568e-4c25-8d6f-30612b4d311d');
+      const response = await fetch(FUNC_URLS.settings);
       if (!response.ok) throw new Error('Ошибка загрузки контактов');
       const data = await response.json();
-      setContactPage(data);
+      setContactPage(data.contacts || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка загрузки контактов');
     } finally {
@@ -412,20 +421,24 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateContactPage = async (updates: Partial<ContactPage>) => {
+    setLoading(true);
+    setError(null);
     try {
-      const updated = contactPage ? { ...contactPage, ...updates } : null;
-      if (!updated) return;
-      
-      const response = await fetch('https://functions.poehali.dev/56fd2c98-568e-4c25-8d6f-30612b4d311d', {
-        method: 'PUT',
+      const response = await fetch(FUNC_URLS.settings, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updated)
+        body: JSON.stringify({
+          section: 'contacts',
+          data: updates
+        })
       });
       if (!response.ok) throw new Error('Ошибка обновления контактов');
       const data = await response.json();
-      setContactPage(data);
+      setContactPage(data.contacts || null);
     } catch (err) {
-      console.error('Failed to update contact page:', err);
+      setError(err instanceof Error ? err.message : 'Ошибка обновления контактов');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -433,15 +446,10 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const savedHome = localStorage.getItem('admin_homepage');
-      const mockHome: Homepage = savedHome ? JSON.parse(savedHome) : {
-        id: 1,
-        site_name: 'Садовый Сервис',
-        hero_title: 'Профессиональный уход за садом',
-        hero_subtitle: 'Более 10 лет заботимся о вашем участке',
-        blocks: []
-      };
-      setHomepage(mockHome);
+      const response = await fetch(FUNC_URLS.settings);
+      if (!response.ok) throw new Error('Ошибка загрузки настроек');
+      const data = await response.json();
+      setHomepage(data.homepage || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка загрузки главной');
     } finally {
@@ -450,10 +458,24 @@ export const AdminContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateHomepage = async (updates: Partial<Homepage>) => {
-    const updated = homepage ? { ...homepage, ...updates, updated_at: new Date().toISOString() } : null;
-    setHomepage(updated);
-    if (updated) {
-      localStorage.setItem('admin_homepage', JSON.stringify(updated));
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(FUNC_URLS.settings, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          section: 'homepage',
+          data: updates
+        })
+      });
+      if (!response.ok) throw new Error('Ошибка обновления главной');
+      const data = await response.json();
+      setHomepage(data.homepage || null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ошибка обновления главной');
+    } finally {
+      setLoading(false);
     }
   };
 
