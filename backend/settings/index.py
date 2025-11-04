@@ -7,9 +7,26 @@ Returns: HTTP response с настройками сайта или резуль�
 
 import json
 import os
+from datetime import datetime
 from typing import Dict, Any, Optional
 import psycopg2
 from psycopg2.extras import RealDictCursor
+
+def json_serializer(obj):
+    """JSON serializer для datetime объектов"""
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    raise TypeError(f"Type {type(obj)} not serializable")
+
+def convert_dates_to_str(data):
+    """Конвертирует datetime объекты в строки"""
+    if isinstance(data, dict):
+        return {k: convert_dates_to_str(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [convert_dates_to_str(item) for item in data]
+    elif isinstance(data, datetime):
+        return data.isoformat()
+    return data
 
 def get_db_connection():
     """Создает подключение к базе данных"""
@@ -49,7 +66,7 @@ def get_all_settings(conn) -> Dict[str, Any]:
         cur.execute("SELECT * FROM posts ORDER BY created_at DESC")
         posts = cur.fetchall()
         
-        return {
+        result = {
             'siteSettings': dict(site_settings) if site_settings else {},
             'homepage': dict(homepage) if homepage else {},
             'contacts': dict(contacts) if contacts else {},
@@ -58,6 +75,8 @@ def get_all_settings(conn) -> Dict[str, Any]:
             'team': [dict(t) for t in team],
             'posts': [dict(p) for p in posts]
         }
+        
+        return convert_dates_to_str(result)
 
 def update_site_settings(conn, data: Dict[str, Any]) -> Dict[str, Any]:
     """Обновляет настройки сайта"""
@@ -218,6 +237,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             section = body_data.get('section')
             data = body_data.get('data', {})
             
+            print(f"Updating section: {section}, data: {data}")
+            
             if section == 'siteSettings':
                 result = update_site_settings(conn, data)
             elif section == 'homepage':
@@ -233,12 +254,17 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'isBase64Encoded': False
                 }
             
+            # После обновления получаем свежие данные
+            updated_settings = get_all_settings(conn)
             conn.close()
             
             return {
                 'statusCode': 200,
                 'headers': headers,
-                'body': json.dumps(result),
+                'body': json.dumps({
+                    **result,
+                    **updated_settings
+                }, default=json_serializer),
                 'isBase64Encoded': False
             }
         
