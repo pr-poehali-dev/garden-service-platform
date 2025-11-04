@@ -22,6 +22,23 @@
         "success": true
       },
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "Update homepage",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "section": "homepage",
+        "data": {
+          "site_name": "Test Homepage",
+          "hero_title": "Welcome"
+        }
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
     }
   ]
 }

@@ -128,11 +128,15 @@ def update_homepage(conn, data: Dict[str, Any]) -> Dict[str, Any]:
         
         for field in allowed_fields:
             if field in data:
+                # Сохраняем даже пустые значения
                 fields.append(f"{field} = %s")
                 if field == 'blocks':
-                    values.append(json.dumps(data[field]))
+                    values.append(json.dumps(data[field]) if data[field] else None)
                 else:
-                    values.append(data[field])
+                    values.append(data[field] if data[field] != '' else None)
+        
+        print(f"Fields to update: {fields}")
+        print(f"Number of fields: {len(fields)}")
         
         if not fields:
             return {'success': False, 'error': 'No valid fields to update'}
@@ -145,15 +149,20 @@ def update_homepage(conn, data: Dict[str, Any]) -> Dict[str, Any]:
         
         if exists:
             query = f"UPDATE homepage SET {', '.join(fields)} WHERE id = 1"
+            print(f"Executing UPDATE query: {query}")
+            print(f"Values: {values}")
             cur.execute(query, values)
         else:
             # Создаем новую запись если её нет
             field_names = [f.split(' = ')[0] for f in fields if 'updated_at' not in f]
             placeholders = ', '.join(['%s'] * len(values))
             query = f"INSERT INTO homepage (id, {', '.join(field_names)}, updated_at) VALUES (1, {placeholders}, CURRENT_TIMESTAMP)"
+            print(f"Executing INSERT query: {query}")
+            print(f"Values: {values}")
             cur.execute(query, values)
         
         conn.commit()
+        print("Committed successfully")
         return {'success': True, 'message': 'Homepage updated'}
 
 def update_contacts(conn, data: Dict[str, Any]) -> Dict[str, Any]:
